@@ -10,7 +10,7 @@
 [![Skills](https://img.shields.io/badge/skills-76-e879f9?style=for-the-badge&logo=databricks&logoColor=white&labelColor=0b1020)](content/skills)
 [![JSON Schema](https://img.shields.io/badge/schema-JSON%20Schema-f59e0b?style=for-the-badge&logo=json&logoColor=white&labelColor=0b1020)](schema/)
 
-[![Next.js](https://img.shields.io/badge/Next.js-15-000000?style=flat-square&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=flat-square&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
