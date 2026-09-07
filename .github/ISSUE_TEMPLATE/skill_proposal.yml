@@ -1,0 +1,100 @@
+name: 🧩 Skill proposal
+description: Propose a new capability for the registry.
+title: "skill: "
+labels: ["skill proposal", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The registry admits **capabilities, not prompts**. If an entry cannot state
+        how it validates its own output, it is a prompt and does not belong here.
+        See [CONTRIBUTING.md](../blob/main/CONTRIBUTING.md) for the full admission standard.
+
+  - type: input
+    id: name
+    attributes:
+      label: Skill name
+      placeholder: Source Credibility Assessment
+    validations:
+      required: true
+
+  - type: textarea
+    id: purpose
+    attributes:
+      label: Purpose
+      description: One outcome, stated plainly. Composite work belongs in the composer.
+    validations:
+      required: true
+
+  - type: textarea
+    id: trigger
+    attributes:
+      label: Trigger
+      description: The condition under which an agent should reach for this skill.
+    validations:
+      required: true
+
+  - type: textarea
+    id: validation
+    attributes:
+      label: Validation criteria
+      description: How the skill knows it succeeded. This is the admission test.
+    validations:
+      required: true
+
+  - type: textarea
+    id: failure-modes
+    attributes:
+      label: Failure modes
+      description: >
+        Each must be one that has occurred or that follows from the procedure,
+        with a mitigation that changes the procedure.
+    validations:
+      required: true
+
+  - type: textarea
+    id: escalation
+    attributes:
+      label: Escalation
+      description: Name the condition and the recipient. "Escalate if unsure" is not an escalation rule.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: layer
+    attributes:
+      label: Architectural layer
+      options:
+        - L1 Cognitive
+        - L2 Knowledge
+        - L3 Action
+        - L4 Domain
+        - L5 Agentic
+        - Not sure
+    validations:
+      required: true
+
+  - type: dropdown
+    id: risk
+    attributes:
+      label: Risk level
+      description: Above low risk, restricted actions are mandatory.
+      options:
+        - low
+        - medium
+        - high
+        - critical
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: This is one skill with one outcome.
+          required: true
+        - label: I searched the registry and no existing skill covers this.
+          required: true
+        - label: I am willing to write the YAML definition.
+          required: false

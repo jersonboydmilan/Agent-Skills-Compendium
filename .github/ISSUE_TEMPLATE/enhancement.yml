@@ -1,0 +1,37 @@
+name: ✨ Enhancement
+description: Propose a change to the framework, the site, the API or the tooling.
+title: "feat: "
+labels: ["enhancement", "triage"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What is hard or impossible today? Describe the situation, not the solution.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: What it affects
+      description: Schema, existing skill definitions, API responses, or consumers downstream.
+      placeholder: >
+        A change to inputs, outputs or validation is a major version bump,
+        because it breaks consumers.
+    validations:
+      required: false
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+    validations:
+      required: false

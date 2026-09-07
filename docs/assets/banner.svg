@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" width="1200" height="340" role="img" aria-label="Agent Skills Compendium — a structured intelligence layer for AI agent capabilities">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1020"/>
+      <stop offset="55%" stop-color="#131a35"/>
+      <stop offset="100%" stop-color="#1b1338"/>
+    </linearGradient>
+    <linearGradient id="title" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#7dd3fc"/>
+      <stop offset="45%" stop-color="#a78bfa"/>
+      <stop offset="100%" stop-color="#f0abfc"/>
+    </linearGradient>
+    <linearGradient id="rule" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.9"/>
+      <stop offset="50%" stop-color="#a78bfa" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#f472b6" stop-opacity="0.15"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#a78bfa" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#a78bfa" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="340" rx="18" fill="url(#bg)"/>
+  <circle cx="1010" cy="120" r="260" fill="url(#glow)"/>
+
+  <!-- layer stack glyph -->
+  <g transform="translate(72 96)" opacity="0.95">
+    <rect x="0"  y="0"   width="132" height="26" rx="7" fill="#38bdf8" opacity="0.85"/>
+    <rect x="14" y="38"  width="118" height="26" rx="7" fill="#818cf8" opacity="0.85"/>
+    <rect x="28" y="76"  width="104" height="26" rx="7" fill="#a78bfa" opacity="0.9"/>
+    <rect x="42" y="114" width="90"  height="26" rx="7" fill="#e879f9" opacity="0.85"/>
+  </g>
+
+  <text x="248" y="126" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="54" font-weight="700" fill="url(#title)" letter-spacing="-1">Agent Skills Compendium</text>
+
+  <rect x="248" y="148" width="620" height="3" rx="1.5" fill="url(#rule)"/>
+
+  <text x="248" y="192" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="21" fill="#c7d2fe">A structured intelligence layer for building, understanding and</text>
+  <text x="248" y="222" font-family="ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="21" fill="#c7d2fe">deploying AI agent capabilities.</text>
+
+  <!-- stat pills -->
+  <g font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" font-size="15">
+    <g transform="translate(248 254)">
+      <rect width="126" height="34" rx="17" fill="#38bdf8" opacity="0.14"/>
+      <rect width="126" height="34" rx="17" fill="none" stroke="#38bdf8" stroke-opacity="0.45"/>
+      <text x="63" y="22" text-anchor="middle" fill="#7dd3fc">76 skills</text>
+    </g>
+    <g transform="translate(388 254)">
+      <rect width="150" height="34" rx="17" fill="#818cf8" opacity="0.14"/>
+      <rect width="150" height="34" rx="17" fill="none" stroke="#818cf8" stroke-opacity="0.45"/>
+      <text x="75" y="22" text-anchor="middle" fill="#a5b4fc">20 categories</text>
+    </g>
+    <g transform="translate(552 254)">
+      <rect width="122" height="34" rx="17" fill="#a78bfa" opacity="0.14"/>
+      <rect width="122" height="34" rx="17" fill="none" stroke="#a78bfa" stroke-opacity="0.45"/>
+      <text x="61" y="22" text-anchor="middle" fill="#c4b5fd">5 layers</text>
+    </g>
+    <g transform="translate(688 254)">
+      <rect width="118" height="34" rx="17" fill="#e879f9" opacity="0.14"/>
+      <rect width="118" height="34" rx="17" fill="none" stroke="#e879f9" stroke-opacity="0.45"/>
+      <text x="59" y="22" text-anchor="middle" fill="#f0abfc">49 tools</text>
+    </g>
+  </g>
+
+  <text x="1128" y="300" text-anchor="end" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#64748b">MIT · v0.1 · Jerson Boyd Milan</text>
+</svg>

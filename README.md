@@ -1,17 +1,66 @@
-# Agent Skills Compendium
+<div align="center">
+
+<img src="docs/assets/banner.svg" alt="Agent Skills Compendium" width="100%">
+
+<br>
+
+[![CI](https://img.shields.io/github/actions/workflow/status/linuxdel/Agent-Skills-Compendium/ci.yml?branch=main&style=for-the-badge&logo=githubactions&logoColor=white&label=CI&labelColor=0b1020&color=22c55e)](https://github.com/linuxdel/Agent-Skills-Compendium/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-a78bfa?style=for-the-badge&logo=opensourceinitiative&logoColor=white&labelColor=0b1020)](LICENSE)
+[![Version](https://img.shields.io/badge/version-0.1.0-38bdf8?style=for-the-badge&logo=semanticrelease&logoColor=white&labelColor=0b1020)](CHANGELOG.md)
+[![Skills](https://img.shields.io/badge/skills-76-e879f9?style=for-the-badge&logo=databricks&logoColor=white&labelColor=0b1020)](content/skills)
+[![JSON Schema](https://img.shields.io/badge/schema-JSON%20Schema-f59e0b?style=for-the-badge&logo=json&logoColor=white&labelColor=0b1020)](schema/)
+
+[![Next.js](https://img.shields.io/badge/Next.js-15-000000?style=flat-square&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Zod](https://img.shields.io/badge/Zod-3-3E67B1?style=flat-square&logo=zod&logoColor=white)](https://zod.dev/)
+[![Node](https://img.shields.io/badge/Node-%E2%89%A520-5FA04E?style=flat-square&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-22c55e?style=flat-square&logo=github&logoColor=white)](CONTRIBUTING.md)
+
+**[📚 Architecture](docs/ARCHITECTURE.md)** ·
+**[🗂️ Taxonomy](docs/TAXONOMY.md)** ·
+**[🔌 Interoperability](docs/INTEROPERABILITY.md)** ·
+**[⚖️ Governance](governance/skill-governance.md)** ·
+**[🧪 Evaluation](evaluation/evaluation-framework.md)** ·
+**[🤝 Contributing](CONTRIBUTING.md)**
+
+</div>
+
+---
 
 A structured intelligence layer for building, understanding, and deploying AI agent
 capabilities.
 
 This is a **capability registry**, not a prompt library. The distinction it is built on:
 
-- A **tool** is something an agent can *use* — a browser, a SQL client, a deployment system.
-- A **skill** is something an agent knows how to *accomplish* — with a trigger, inputs, a
+- 🔧 A **tool** is something an agent can *use* — a browser, a SQL client, a deployment system.
+- 🧠 A **skill** is something an agent knows how to *accomplish* — with a trigger, inputs, a
   procedure, validation criteria, failure modes and an escalation path.
 
 A skill may invoke several tools to produce a validated outcome.
 
-## Where this sits
+<table>
+<tr>
+<td align="center"><strong>76</strong><br><sub>skills</sub></td>
+<td align="center"><strong>20</strong><br><sub>categories</sub></td>
+<td align="center"><strong>5</strong><br><sub>architectural layers</sub></td>
+<td align="center"><strong>49</strong><br><sub>normalised tools</sub></td>
+<td align="center"><strong>8</strong><br><sub>public API routes</sub></td>
+<td align="center"><strong>MIT</strong><br><sub>per definition</sub></td>
+</tr>
+</table>
+
+## 🧭 Contents
+
+| | | |
+|---|---|---|
+| [📐 Where this sits](#-where-this-sits) | [🚫 What this is not](#-what-this-is-not) | [✍️ Authorship](#️-authorship) |
+| [📦 What is here](#-what-is-here) | [⚡ Running it](#-running-it) | [🏛️ Architecture](#️-architecture) |
+| [🔌 Machine interface](#-machine-interface) | [➕ Adding a skill](#-adding-a-skill) | [🗒️ Notes on the current build](#️-notes-on-the-current-build) |
+| [🖥️ Interface](#️-interface) | [🧱 Frameworks](#-frameworks) | [📄 Project documents](#-project-documents) |
+
+## 📐 Where this sits
 
 ```
 ┌───────────────────────────────┐
@@ -51,7 +100,7 @@ A skill may invoke several tools to produce a validated outcome.
 └───────────────────────────────┘
 ```
 
-## What this is not
+## 🚫 What this is not
 
 **Not a prompt library.** A prompt produces a result once. A skill declares a
 trigger, typed inputs, a procedure, validation criteria, failure modes and an
@@ -74,7 +123,7 @@ to build against and expected to move.
 
 See [docs/INTEROPERABILITY.md](docs/INTEROPERABILITY.md) for the full position.
 
-## Authorship
+## ✍️ Authorship
 
 **Created and originally architected by Jerson Boyd Milan**
 
@@ -91,20 +140,20 @@ Licensed under the [MIT License](LICENSE). Every skill definition also carries
 `license: MIT` in its own metadata, so a definition extracted from the registry
 travels with its license attached.
 
-## What is here
+## 📦 What is here
 
 | | |
 |---|---|
-| Skills | 76, each fully specified against one canonical schema |
-| Categories | 20, stored as data — adding one is a content change, not a code change |
-| Architectural layers | 5 — Cognitive, Knowledge, Action, Domain, Agentic |
-| Tools | 49, in a normalised registry that skills reference by id |
+| 🧠 **Skills** | 76, each fully specified against one canonical schema |
+| 🗂️ **Categories** | 20, stored as data — adding one is a content change, not a code change |
+| 🧬 **Architectural layers** | 5 — Cognitive, Knowledge, Action, Domain, Agentic |
+| 🔧 **Tools** | 49, in a normalised registry that skills reference by id |
 
 Every skill answers ten questions completely: what it does, when to use it, what it needs,
 what tools it may use, how it executes, how it validates the result, what goes wrong, when it
 should escalate, what it produces, and which skills it connects to.
 
-## Running it
+## ⚡ Running it
 
 ```bash
 npm install
@@ -132,7 +181,7 @@ project. It covers search scoring and facet filtering, relationship resolution a
 ordering, YAML/JSON export round-tripping, and the integrity of the published registry —
 every category, layer and tool reference, every relationship edge, and slug uniqueness.
 
-## Architecture
+## 🏛️ Architecture
 
 ```
 content/                     the registry — this is the product
@@ -157,14 +206,14 @@ src/app/api/                 the machine interface
 tests/                       node --test suites over the lib layer and the registry
 ```
 
-### Swapping the storage backend
+### 🔄 Swapping the storage backend
 
 Nothing outside `src/lib/content-store.ts` knows the registry lives on disk. Pages and API
 routes depend on the `SkillRepository` interface only. Moving to Postgres, a KV store or a
 remote registry means implementing that interface and exporting a different `repository` —
 no page, component or route changes.
 
-## Machine interface
+## 🔌 Machine interface
 
 ```
 GET /api/skills                              filterable; add ?view=full for whole definitions
@@ -198,7 +247,7 @@ npx ajv validate -s skill.schema.json -d skill.json
 YAML export is round-trippable: the exported document has the same shape as the source file
 and re-validates against the schema unchanged.
 
-## Adding a skill
+## ➕ Adding a skill
 
 1. Copy an existing definition (every skill page exposes its YAML).
 2. Write it to `content/skills/<slug>.yaml`. The filename must match the slug.
@@ -208,7 +257,7 @@ and re-validates against the schema unchanged.
 
 The full admission standard is at `/contribute`.
 
-## Notes on the current build
+## 🗒️ Notes on the current build
 
 - Typography uses system font stacks rather than a webfont, so the build has no network
   dependency. Swapping in a licensed face is a change to `--font-sans` / `--font-mono` in
@@ -224,9 +273,9 @@ The full admission standard is at `/contribute`.
 - Colour tokens in `src/app/globals.css` are held to WCAG AA (4.5:1) against every surface
   they are used on, in both the light and dark palettes.
 
-## Interface
+## 🖥️ Interface
 
-### Registry
+### 🔍 Registry
 
 Search and seven filter facets over the whole registry — architectural layer,
 category, complexity, maturity, build speed, shareability and risk level. Facet
@@ -238,7 +287,7 @@ screen.
 
 ![Skill registry filtered to the L5 Agentic layer](docs/screenshots/02-skill-registry.png)
 
-### Skill detail
+### 📄 Skill detail
 
 Every skill renders its full specification: purpose, trigger, typed inputs,
 tools, procedure, decision rules, outputs, validation, failure modes,
@@ -247,15 +296,25 @@ escalation, worked examples, relationships and the governance surface
 
 ![Prompt Injection Defence skill specification](docs/screenshots/03-skill-detail.png)
 
-### Architectural layers
+<details>
+<summary><b>🧬 Architectural layers</b> — the five-layer model, with live skill counts</summary>
+
+<br>
 
 ![The five architectural layers](docs/screenshots/04-layers.png)
 
-### Category view
+</details>
+
+<details>
+<summary><b>🗂️ Category view</b> — one of twenty capability categories</summary>
+
+<br>
 
 ![Agent Security category](docs/screenshots/05-category.png)
 
-### Composer
+</details>
+
+### 🧩 Composer
 
 Select skills and the composer resolves their prerequisites, orders them for
 execution, aggregates required permissions and tools, reports the highest risk
@@ -263,20 +322,25 @@ level in the chain, and exports the result as an agent specification.
 
 ![Skill composer](docs/screenshots/06-composer.png)
 
-### Home
+<details>
+<summary><b>🏠 Home</b></summary>
+
+<br>
 
 ![Agent Skills Compendium home](docs/screenshots/01-home.png)
 
-## Frameworks
+</details>
+
+## 🧱 Frameworks
 
 Beyond the registry itself, three framework layers make the definitions
 testable, governable and portable:
 
 | | |
 |---|---|
-| [Evaluation](evaluation/evaluation-framework.md) | Nine scored dimensions with validity conditions for a reportable result. Machine-readable via [`evaluation-schema.yaml`](evaluation/evaluation-schema.yaml). |
-| [Governance](governance/skill-governance.md) | Risk classification, permission scoping, human-approval triggers, audit and escalation requirements. Machine-readable via [`governance-schema.yaml`](governance/governance-schema.yaml). |
-| [Portable schema](schema/) | JSON Schema and YAML generated from the canonical zod definition, self-tested against all 76 skills. Served at `/api/schema`. |
+| 🧪 [**Evaluation**](evaluation/evaluation-framework.md) | Nine scored dimensions with validity conditions for a reportable result. Machine-readable via [`evaluation-schema.yaml`](evaluation/evaluation-schema.yaml). |
+| ⚖️ [**Governance**](governance/skill-governance.md) | Risk classification, permission scoping, human-approval triggers, audit and escalation requirements. Machine-readable via [`governance-schema.yaml`](governance/governance-schema.yaml). |
+| 📐 [**Portable schema**](schema/) | JSON Schema and YAML generated from the canonical zod definition, self-tested against all 76 skills. Served at `/api/schema`. |
 
 Generated artifacts are never hand-maintained:
 
@@ -285,29 +349,42 @@ npm run generate:schema   # schema/ from src/lib/schema.ts, self-tests on all 76
 npm run export:skills     # dist/skills/**/SKILL.md packages
 ```
 
-## Project documents
+## 📄 Project documents
 
-| Document | Purpose |
-|---|---|
-| [AUTHORS.md](AUTHORS.md) | Creator and contributors |
-| [COPYRIGHT.md](COPYRIGHT.md) | Copyright, third-party materials, licensing status |
-| [PROVENANCE.md](PROVENANCE.md) | Origin, attribution policy, verification status |
-| [CITATION.cff](CITATION.cff) | Machine-readable citation metadata |
-| [CHANGELOG.md](CHANGELOG.md) | Release history |
-| [CONTRIBUTING.md](CONTRIBUTING.md) | How to contribute a skill |
-| [LICENSE](LICENSE) | MIT License |
-| [docs/ORIGIN.md](docs/ORIGIN.md) | Conceptual origin of the framework |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | The five-layer model and skill specification |
-| [docs/TAXONOMY.md](docs/TAXONOMY.md) | All 20 categories with their capabilities |
-| [docs/INTEROPERABILITY.md](docs/INTEROPERABILITY.md) | Position relative to MCP, SKILL.md and agent runtimes |
-| `/api-reference` | Live API documentation, rendered from the route definitions |
-| [evaluation/](evaluation/evaluation-framework.md) | Skill evaluation framework and result schema |
-| [governance/](governance/skill-governance.md) | Skill governance model and policy schema |
+| | Document | Purpose |
+|---|---|---|
+| ✍️ | [AUTHORS.md](AUTHORS.md) | Creator and contributors |
+| ©️ | [COPYRIGHT.md](COPYRIGHT.md) | Copyright, third-party materials, licensing status |
+| 🔗 | [PROVENANCE.md](PROVENANCE.md) | Origin, attribution policy, verification status |
+| 🎓 | [CITATION.cff](CITATION.cff) | Machine-readable citation metadata |
+| 📝 | [CHANGELOG.md](CHANGELOG.md) | Release history |
+| 🤝 | [CONTRIBUTING.md](CONTRIBUTING.md) | How to contribute a skill |
+| 📜 | [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) | Community standards and enforcement |
+| 🔐 | [SECURITY.md](SECURITY.md) | Vulnerability reporting, scope and threat model |
+| ⚖️ | [LICENSE](LICENSE) | MIT License |
+| 🌱 | [docs/ORIGIN.md](docs/ORIGIN.md) | Conceptual origin of the framework |
+| 🏛️ | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | The five-layer model and skill specification |
+| 🗂️ | [docs/TAXONOMY.md](docs/TAXONOMY.md) | All 20 categories with their capabilities |
+| 🔌 | [docs/INTEROPERABILITY.md](docs/INTEROPERABILITY.md) | Position relative to MCP, SKILL.md and agent runtimes |
+| 📡 | `/api-reference` | Live API documentation, rendered from the route definitions |
+| 🧪 | [evaluation/](evaluation/evaluation-framework.md) | Skill evaluation framework and result schema |
+| ⚖️ | [governance/](governance/skill-governance.md) | Skill governance model and policy schema |
+| 🤖 | [.github/](.github) | CI, issue forms, pull request template, Dependabot policy |
 
 ---
 
-**Agent Skills Compendium**  
-Created and originally architected by **Jerson Boyd Milan**  
-https://jersonboydmilan.com/
+<div align="center">
+
+### ⭐ Agent Skills Compendium
+
+Created and originally architected by **Jerson Boyd Milan**
+
+[![Website](https://img.shields.io/badge/jersonboydmilan.com-a78bfa?style=for-the-badge&logo=safari&logoColor=white&labelColor=0b1020)](https://jersonboydmilan.com/)
+[![License](https://img.shields.io/badge/MIT-38bdf8?style=for-the-badge&logo=opensourceinitiative&logoColor=white&labelColor=0b1020)](LICENSE)
+[![Cite](https://img.shields.io/badge/cite%20this-CITATION.cff-e879f9?style=for-the-badge&logo=googlescholar&logoColor=white&labelColor=0b1020)](CITATION.cff)
+
+If the framework is useful to you, a star helps other people find it.
 
 © 2026 Jerson Boyd Milan
+
+</div>

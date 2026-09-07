@@ -1,0 +1,67 @@
+name: 🐞 Bug report
+description: Something in the registry, the site or the API behaves incorrectly.
+title: "bug: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. A reproduction beats a description every time.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      description: Which part of the project is affected?
+      options:
+        - Registry content (a skill, category, layer or tool definition)
+        - Web interface (search, filters, skill pages, composer)
+        - Machine interface (/api/*)
+        - Schema / validation (validate:content, generate:schema)
+        - Export (YAML / JSON / SKILL.md)
+        - Build or tooling
+        - Documentation
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you observed, and what you expected instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: A URL, a `curl` command or a numbered sequence.
+      placeholder: |
+        1. Go to /skills?layer=agentic
+        2. Select the "high" risk facet
+        3. …
+      render: markdown
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      description: The release tag or commit SHA you are on.
+      placeholder: v0.1.0 / bd077ba
+    validations:
+      required: false
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Node version, OS, browser — whichever apply.
+      placeholder: |
+        Node: 22.11.0
+        OS: macOS 15.2
+        Browser: Firefox 133
+    validations:
+      required: false

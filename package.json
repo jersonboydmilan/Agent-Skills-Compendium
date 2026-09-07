@@ -3,6 +3,34 @@
   "version": "0.1.0",
   "private": true,
   "description": "A structured intelligence layer for building, understanding, and deploying AI agent capabilities.",
+  "keywords": [
+    "ai-agents",
+    "agent-skills",
+    "capability-registry",
+    "skill-specification",
+    "agent-framework",
+    "mcp",
+    "taxonomy",
+    "ontology",
+    "governance",
+    "evaluation",
+    "json-schema",
+    "nextjs",
+    "typescript"
+  ],
+  "homepage": "https://github.com/linuxdel/Agent-Skills-Compendium#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/linuxdel/Agent-Skills-Compendium.git"
+  },
+  "bugs": {
+    "url": "https://github.com/linuxdel/Agent-Skills-Compendium/issues"
+  },
+  "license": "MIT",
+  "author": "Jerson Boyd Milan (https://jersonboydmilan.com/)",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
