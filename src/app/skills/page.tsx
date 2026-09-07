@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { repository } from "@/lib/content-store";
 import { applyFilters, filtersFromParams } from "@/lib/search";
 import {
@@ -145,7 +146,17 @@ export default async function SkillsPage({ searchParams }: { searchParams: Searc
               <p className="text-[0.9375rem] text-[var(--color-ink-muted)]">
                 No skill matches these constraints.
               </p>
-              <p className="label mt-2">Try removing a filter, or search a capability instead</p>
+              <p className="mt-2 text-[0.875rem] text-[var(--color-ink-muted)]">
+                {filters.q
+                  ? `Nothing in the registry matches \u201c${filters.q}\u201d with the filters you have on.`
+                  : "The filters you have on have no skill in common."}
+              </p>
+              <Link
+                href="/skills"
+                className="mt-5 inline-block border border-[var(--color-ink)] bg-[var(--color-ink)] px-4 py-2 font-mono text-[0.75rem] tracking-[0.06em] text-[var(--color-paper)] transition-opacity hover:opacity-90"
+              >
+                CLEAR ALL FILTERS
+              </Link>
             </div>
           ) : (
             <div className="grid gap-px border border-[var(--color-rule)] bg-[var(--color-rule)] sm:grid-cols-2 xl:grid-cols-3">

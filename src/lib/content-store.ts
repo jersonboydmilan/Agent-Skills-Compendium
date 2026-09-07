@@ -79,8 +79,13 @@ function buildIndex(): ContentIndex {
   };
 }
 
-/** Parse once per process. Content is immutable at runtime in v1. */
+/**
+ * Parse once per process in production, where content is immutable at runtime.
+ * In development the index is rebuilt per call so an edit to a YAML file shows
+ * up on the next reload instead of after a server restart.
+ */
 export function index(): ContentIndex {
+  if (process.env.NODE_ENV !== "production") return buildIndex();
   if (!cache) cache = buildIndex();
   return cache;
 }

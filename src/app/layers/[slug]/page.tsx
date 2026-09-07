@@ -100,6 +100,16 @@ export default async function LayerPage({ params }: { params: Params }) {
           <h2 className="text-lg font-medium">Skills at this layer</h2>
           <Label>{members.length} skills</Label>
         </div>
+        {members.length === 0 ? (
+          <div className="border border-dashed border-[var(--color-rule-strong)] p-12 text-center">
+            <p className="text-[0.9375rem] text-[var(--color-ink-muted)]">
+              No skill has been published at this layer yet.
+            </p>
+            <Link href="/skills" className="label mt-3 inline-block underline underline-offset-4">
+              Browse the whole registry
+            </Link>
+          </div>
+        ) : (
         <div className="grid gap-px border border-[var(--color-rule)] bg-[var(--color-rule)] sm:grid-cols-2 lg:grid-cols-3">
           {members.map((skill) => (
             <SkillCard
@@ -109,6 +119,7 @@ export default async function LayerPage({ params }: { params: Params }) {
             />
           ))}
         </div>
+        )}
       </section>
     </div>
   );

@@ -132,10 +132,11 @@ export default async function ApiReferencePage() {
         </p>
         <pre className="mt-4 overflow-x-auto border border-[var(--color-rule)] bg-[var(--color-raised)] p-4 font-mono text-[0.75rem] leading-relaxed">
           <code>{`# fetch a portable definition
-curl <host>/api/skills/source-credibility-assessment/export?format=yaml
+curl <host>/api/skills/source-credibility-assessment/export?format=json > skill.json
 
-# validate one against the published schema
-npx ajv validate -s schema/skill.schema.json -d skill.json`}</code>
+# fetch the canonical schema and validate the definition against it
+curl <host>/api/schema > skill.schema.json
+npx ajv validate -s skill.schema.json -d skill.json`}</code>
         </pre>
       </section>
     </div>

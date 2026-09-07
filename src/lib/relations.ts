@@ -68,3 +68,30 @@ export function prerequisiteChain(
   for (const slug of slugs) visit(slug, []);
   return { ordered, cycles };
 }
+
+/**
+ * Orders an explicit selection so no step runs before a prerequisite that is
+ * also in the selection. Prerequisites the caller did not select are left to
+ * the caller to report — this function never silently adds a step.
+ */
+export function orderSelection(
+  selected: string[],
+  prerequisitesOf: (slug: string) => string[],
+): string[] {
+  const done = new Set<string>();
+  const visiting = new Set<string>();
+  const out: string[] = [];
+  const inSelection = new Set(selected);
+
+  const visit = (slug: string) => {
+    if (done.has(slug) || visiting.has(slug)) return; // a cycle stops here rather than recursing
+    visiting.add(slug);
+    for (const pre of prerequisitesOf(slug)) if (inSelection.has(pre)) visit(pre);
+    visiting.delete(slug);
+    done.add(slug);
+    out.push(slug);
+  };
+
+  for (const slug of selected) visit(slug);
+  return out;
+}

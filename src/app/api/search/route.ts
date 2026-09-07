@@ -1,12 +1,12 @@
 import type { NextRequest } from "next/server";
 import { repository } from "@/lib/content-store";
 import { searchSkills } from "@/lib/search";
-import { apiJson } from "@/lib/api";
+import { apiJson, parseLimit } from "@/lib/api";
 
 /** GET /api/search?q= — matches skills, categories and layers in one response. */
 export async function GET(request: NextRequest) {
   const q = (request.nextUrl.searchParams.get("q") ?? "").trim();
-  const limit = Math.min(Number(request.nextUrl.searchParams.get("limit") ?? 20) || 20, 100);
+  const limit = parseLimit(request.nextUrl.searchParams.get("limit"));
 
   const [skills, categories, layers] = await Promise.all([
     repository.listSkills(),

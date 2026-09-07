@@ -10,7 +10,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     repository.listLayers(),
   ]);
 
-  const staticRoutes = ["", "/skills", "/categories", "/layers", "/compose", "/contribute"].map(
+  const staticRoutes = [
+    "",
+    "/skills",
+    "/categories",
+    "/layers",
+    "/compose",
+    "/api-reference",
+    "/contribute",
+  ].map(
     (path) => ({
       url: `${BASE}${path}`,
       lastModified: new Date(),

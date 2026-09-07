@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { track } from "@/lib/analytics";
@@ -30,6 +29,9 @@ export function SearchDialog({ entries }: { entries: SearchEntry[] }) {
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const openerRef = useRef<HTMLButtonElement>(null);
   const router = useRouter();
 
   const results = useMemo(() => {
@@ -58,10 +60,23 @@ export function SearchDialog({ entries }: { entries: SearchEntry[] }) {
     if (open) {
       setActive(0);
       requestAnimationFrame(() => inputRef.current?.focus());
-    } else {
-      setQuery("");
+      // Hold the page still behind the dialog, and give it back afterwards.
+      // The scroll container is the root element, not body.
+      const root = document.documentElement;
+      const previous = root.style.overflow;
+      root.style.overflow = "hidden";
+      return () => {
+        root.style.overflow = previous;
+      };
     }
+    setQuery("");
+    openerRef.current?.focus();
   }, [open]);
+
+  // Keep the highlighted row visible when arrowing past the fold.
+  useEffect(() => {
+    listRef.current?.children[active]?.scrollIntoView({ block: "nearest" });
+  }, [active, results.length]);
 
   const commit = useCallback(
     (href: string) => {
@@ -72,13 +87,17 @@ export function SearchDialog({ entries }: { entries: SearchEntry[] }) {
     [query, results.length, router],
   );
 
+  const optionId = (i: number) => `search-option-${i}`;
+
   return (
     <>
       <button
+        ref={openerRef}
         type="button"
         onClick={() => setOpen(true)}
         className="flex shrink-0 items-center gap-2 border border-[var(--color-rule)] bg-[var(--color-surface)] px-3 py-1.5 text-left font-mono text-[0.75rem] whitespace-nowrap text-[var(--color-ink-faint)] transition-colors hover:border-[var(--color-rule-strong)]"
         aria-label="Search skills, categories and layers"
+        aria-haspopup="dialog"
       >
         <span aria-hidden>⌕</span>
         <span className="hidden md:inline">Search capabilities</span>
@@ -92,15 +111,41 @@ export function SearchDialog({ entries }: { entries: SearchEntry[] }) {
           className="fixed inset-0 z-50 flex items-start justify-center bg-[var(--color-ink)]/25 p-4 pt-[12vh] backdrop-blur-[2px]"
           role="dialog"
           aria-modal="true"
-          aria-label="Search"
+          aria-label="Search the registry"
           onClick={(e) => {
             if (e.target === e.currentTarget) setOpen(false);
           }}
         >
-          <div className="w-full max-w-xl border border-[var(--color-rule-strong)] bg-[var(--color-surface)] shadow-2xl">
+          <div
+            ref={panelRef}
+            className="w-full max-w-xl border border-[var(--color-rule-strong)] bg-[var(--color-surface)] shadow-2xl"
+            onKeyDown={(e) => {
+              // Contain Tab inside the dialog: this is the only interactive
+              // surface while it is open.
+              if (e.key !== "Tab") return;
+              const focusable = panelRef.current?.querySelectorAll<HTMLElement>(
+                'a[href], button:not([disabled]), input',
+              );
+              if (!focusable?.length) return;
+              const first = focusable[0];
+              const last = focusable[focusable.length - 1];
+              if (e.shiftKey && document.activeElement === first) {
+                e.preventDefault();
+                last.focus();
+              } else if (!e.shiftKey && document.activeElement === last) {
+                e.preventDefault();
+                first.focus();
+              }
+            }}
+          >
             <input
               ref={inputRef}
               value={query}
+              role="combobox"
+              aria-expanded
+              aria-controls="search-results"
+              aria-autocomplete="list"
+              aria-activedescendant={results[active] ? optionId(active) : undefined}
               onChange={(e) => {
                 setQuery(e.target.value);
                 setActive(0);
@@ -120,17 +165,29 @@ export function SearchDialog({ entries }: { entries: SearchEntry[] }) {
               placeholder="Search skills, categories, layers…"
               className="w-full border-b border-[var(--color-rule)] bg-transparent px-4 py-3.5 text-[0.9375rem] outline-none placeholder:text-[var(--color-ink-faint)]"
             />
-            <ul className="max-h-[50vh] overflow-y-auto py-1">
+            <ul
+              id="search-results"
+              ref={listRef}
+              role="listbox"
+              aria-label="Results"
+              className="max-h-[50vh] overflow-y-auto py-1"
+            >
               {results.length === 0 ? (
                 <li className="px-4 py-6 text-center font-mono text-[0.75rem] text-[var(--color-ink-faint)]">
-                  No capability matches “{query}”
+                  No capability matches “{query}”. Try a shorter word, or browse the registry.
                 </li>
               ) : (
                 results.map((entry, i) => (
-                  <li key={`${entry.kind}-${entry.slug}`}>
-                    <Link
+                  <li key={`${entry.kind}-${entry.slug}`} role="presentation">
+                    <a
+                      id={optionId(i)}
+                      role="option"
+                      aria-selected={i === active}
                       href={entry.href}
-                      onClick={() => commit(entry.href)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        commit(entry.href);
+                      }}
                       onMouseEnter={() => setActive(i)}
                       className={`flex items-baseline justify-between gap-4 px-4 py-2.5 ${
                         i === active ? "bg-[var(--color-raised)]" : ""
@@ -141,11 +198,33 @@ export function SearchDialog({ entries }: { entries: SearchEntry[] }) {
                         <span className="label block truncate">{entry.context}</span>
                       </span>
                       <span className="label shrink-0">{entry.kind}</span>
-                    </Link>
+                    </a>
                   </li>
                 ))
               )}
             </ul>
+            {query.trim() ? (
+              <div className="border-t border-[var(--color-rule)]">
+                <a
+                  href={`/skills?q=${encodeURIComponent(query.trim())}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    commit(`/skills?q=${encodeURIComponent(query.trim())}`);
+                  }}
+                  className="block px-4 py-2.5 text-[0.875rem] text-[var(--color-accent)]"
+                >
+                  Search every field for “{query.trim()}” →
+                </a>
+              </div>
+            ) : null}
+            <p aria-live="polite" className="sr-only">
+              {query.trim()
+                ? `${results.length} ${results.length === 1 ? "result" : "results"} for ${query}`
+                : ""}
+            </p>
+            <p className="label border-t border-[var(--color-rule)] px-4 py-2">
+              ↑↓ to move · ↵ to open · esc to close
+            </p>
           </div>
         </div>
       ) : null}

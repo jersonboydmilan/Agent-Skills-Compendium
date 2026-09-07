@@ -3,6 +3,7 @@ import { repository } from "@/lib/content-store";
 import { LAYER_NAMES } from "@/lib/format";
 import { Logo } from "./logo";
 import { SearchDialog, type SearchEntry } from "./search-dialog";
+import { NavLinks } from "./nav-links";
 
 const NAV = [
   { href: "/skills", label: "Skills" },
@@ -28,7 +29,7 @@ async function buildSearchIndex(): Promise<SearchEntry[]> {
       href: `/layers/${layer.slug}`,
       name: `${layer.id} · ${layer.name}`,
       context: layer.tagline,
-      haystack: `${layer.name} ${layer.tagline} ${layer.description}`.toLowerCase(),
+      haystack: `${layer.tagline} ${layer.description}`.toLowerCase(),
     });
   }
   for (const category of categories) {
@@ -38,7 +39,7 @@ async function buildSearchIndex(): Promise<SearchEntry[]> {
       href: `/categories/${category.slug}`,
       name: category.name,
       context: `${skills.filter((s) => s.category === category.slug).length} skills`,
-      haystack: `${category.name} ${category.description}`.toLowerCase(),
+      haystack: category.description.toLowerCase(),
     });
   }
   for (const skill of skills) {
@@ -48,8 +49,11 @@ async function buildSearchIndex(): Promise<SearchEntry[]> {
       href: `/skills/${skill.slug}`,
       name: skill.name,
       context: `${skill.layer} ${LAYER_NAMES[skill.layer]} · ${skill.category.replace(/-/g, " ")}`,
-      haystack:
-        `${skill.name} ${skill.slug} ${skill.description} ${skill.purpose} ${skill.tags.join(" ")} ${skill.tools.join(" ")}`.toLowerCase(),
+      // `name` and `slug` are matched directly by the dialog, and `purpose` is
+      // long prose that restates the description — carrying either here would
+      // put tens of kilobytes of duplicate text into every page of the site.
+      // Anything not covered lands on the full-registry search instead.
+      haystack: `${skill.description} ${skill.tags.join(" ")} ${skill.tools.join(" ")}`.toLowerCase(),
     });
   }
   return entries;
@@ -67,15 +71,7 @@ export async function SiteHeader() {
           </span>
         </Link>
         <nav className="hidden shrink-0 items-center gap-6 lg:flex" aria-label="Primary">
-          {NAV.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="font-mono text-[0.75rem] tracking-[0.04em] text-[var(--color-ink-muted)] transition-colors hover:text-[var(--color-ink)]"
-            >
-              {item.label}
-            </Link>
-          ))}
+          <NavLinks items={NAV} variant="desktop" />
         </nav>
         <SearchDialog entries={entries} />
       </div>
@@ -83,15 +79,7 @@ export async function SiteHeader() {
         className="flex gap-5 overflow-x-auto border-t border-[var(--color-rule)] px-5 py-2 lg:hidden"
         aria-label="Primary mobile"
       >
-        {NAV.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className="whitespace-nowrap font-mono text-[0.75rem] tracking-[0.04em] text-[var(--color-ink-muted)]"
-          >
-            {item.label}
-          </Link>
-        ))}
+        <NavLinks items={NAV} variant="mobile" />
       </nav>
     </header>
   );

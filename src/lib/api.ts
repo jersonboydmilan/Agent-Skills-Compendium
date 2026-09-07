@@ -25,3 +25,14 @@ export function apiText(body: string, contentType: string, filename?: string) {
 export function apiError(message: string, status: number) {
   return apiJson({ error: message }, { status });
 }
+
+/**
+ * Parses a `limit` query parameter. A negative or zero value must never reach
+ * `Array.slice`, where it silently trims results off the end instead of
+ * returning fewer of them.
+ */
+export function parseLimit(raw: string | null, fallback = 20, max = 100): number {
+  const value = Number(raw ?? fallback);
+  if (!Number.isFinite(value) || value < 1) return fallback;
+  return Math.min(Math.floor(value), max);
+}

@@ -10,6 +10,53 @@ All notable changes to the Agent Skills Compendium are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/), and the
 project uses [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- Test suite (`npm test`) covering search scoring and filtering, relationship
+  resolution and ordering, export round-tripping, and registry integrity
+- `npm run check` — typecheck, lint, content validation and tests in one command
+- `GET /api/schema` — the canonical JSON Schema, so a definition can be
+  validated without cloning the repository
+- Collapsible filter panel on the skill registry below the `lg` breakpoint
+- Active-section marking in the primary navigation
+- Empty states for a category or layer with no published skills, and a
+  clear-all-filters action in the registry's no-results state
+
+### Changed
+
+- The composer keeps its selection and workflow name in the address bar, so a
+  composition survives a refresh and can be shared as a link
+- "Compose with this skill" now opens the composer with that skill selected
+- The skill page's table of contents is derived from the sections actually
+  rendered, so a definition with empty optional sections has no dead anchors
+- The header search index no longer carries `purpose` or duplicated name and
+  slug text, cutting roughly a quarter off the transferred weight of every
+  page; the dialog offers a full-registry search for anything it does not match
+- `--color-ink-faint` darkened in both themes so every text token meets
+  WCAG AA 4.5:1 on every surface
+- `/api/skills` returns 400 naming the accepted values when a closed-vocabulary
+  filter is misspelled, instead of an empty result set
+- `npm run lint` runs ESLint against a flat config instead of prompting for
+  interactive setup
+- Content is re-read per request in development, so a YAML edit no longer
+  requires a server restart
+
+### Fixed
+
+- The skill page's link to the export endpoint replaced the page with raw YAML
+  instead of opening it alongside
+- `GET /api/search?limit=` with a value below 1 silently dropped results off the
+  end of the list rather than returning the default page size
+- The search dialog now traps focus, locks background scrolling, restores focus
+  on close, and exposes combobox semantics to assistive technology
+- Copy actions in the composer and on skill pages report success, and explain
+  the fallback when the browser refuses clipboard access
+- Skill pages no longer render an empty Tools panel when a definition declares
+  no tools
+- The 404 page has its own title and is excluded from indexing
+
 ## [0.1.0] — 2026-09-01
 
 > Published to GitHub on 2026-09-01. Not yet tagged: no `v0.1.0` Git tag or

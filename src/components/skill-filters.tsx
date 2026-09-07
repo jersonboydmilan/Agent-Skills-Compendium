@@ -22,6 +22,9 @@ export function SkillFilters({ facets, total }: { facets: Facet[]; total: number
   const params = useSearchParams();
   const [pending, startTransition] = useTransition();
   const [query, setQuery] = useState(params.get("q") ?? "");
+  // Below `lg` the facet list is a disclosure: seventy-odd chips otherwise push
+  // the first result several screens down on a phone.
+  const [open, setOpen] = useState(false);
 
   const selected = useCallback(
     (param: string): string[] => {
@@ -52,14 +55,22 @@ export function SkillFilters({ facets, total }: { facets: Facet[]; total: number
   };
 
   const submitQuery = (value: string) => {
+    const trimmed = value.trim();
+    if (trimmed === (params.get("q") ?? "")) return; // nothing changed — don't churn the URL
     const next = new URLSearchParams(params.toString());
-    if (value.trim()) next.set("q", value.trim());
+    if (trimmed) next.set("q", trimmed);
     else next.delete("q");
-    track({ name: "skill_search", query: value, results: total });
+    track({ name: "skill_search", query: trimmed, results: total });
     push(next);
   };
 
-  const activeCount = facets.reduce((n, f) => n + selected(f.param).length, 0) + (query ? 1 : 0);
+  const clearAll = () => {
+    setQuery("");
+    push(new URLSearchParams());
+  };
+
+  const facetCount = facets.reduce((n, f) => n + selected(f.param).length, 0);
+  const activeCount = facetCount + (params.get("q") ? 1 : 0);
 
   return (
     <div className="border border-[var(--color-rule)] bg-[var(--color-surface)]">
@@ -85,10 +96,7 @@ export function SkillFilters({ facets, total }: { facets: Facet[]; total: number
         {activeCount > 0 ? (
           <button
             type="button"
-            onClick={() => {
-              setQuery("");
-              push(new URLSearchParams());
-            }}
+            onClick={clearAll}
             className="label whitespace-nowrap underline decoration-[var(--color-rule-strong)] underline-offset-4 hover:text-[var(--color-ink)]"
           >
             Clear {activeCount}
@@ -96,8 +104,26 @@ export function SkillFilters({ facets, total }: { facets: Facet[]; total: number
         ) : null}
       </form>
 
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-controls="skill-facets"
+        className="flex w-full items-center justify-between gap-3 border-b border-[var(--color-rule)] px-4 py-3 text-left lg:hidden"
+      >
+        <span className="label">
+          Filters{facetCount > 0 ? ` · ${facetCount} on` : ""}
+        </span>
+        <span className="label" aria-hidden>
+          {open ? "Hide ▲" : "Show ▼"}
+        </span>
+      </button>
+
       <div
-        className={`divide-y divide-[var(--color-rule)] ${pending ? "opacity-60" : ""}`}
+        id="skill-facets"
+        className={`${open ? "block" : "hidden"} divide-y divide-[var(--color-rule)] lg:block ${
+          pending ? "opacity-60" : ""
+        }`}
         aria-busy={pending}
       >
         {facets.map((facet) => {
@@ -118,7 +144,7 @@ export function SkillFilters({ facets, total }: { facets: Facet[]; total: number
                       aria-pressed={on}
                       disabled={empty}
                       onClick={() => toggle(facet.param, option.value)}
-                      className={`inline-flex items-baseline gap-1.5 border px-2 py-1 font-mono text-[0.6875rem] tracking-[0.04em] transition-colors ${
+                      className={`inline-flex min-h-[1.75rem] items-baseline gap-1.5 border px-2 py-1 font-mono text-[0.6875rem] tracking-[0.04em] transition-colors ${
                         on
                           ? "border-[var(--color-accent)] bg-[var(--color-accent-soft)] text-[var(--color-accent-ink)]"
                           : empty

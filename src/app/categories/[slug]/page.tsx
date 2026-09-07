@@ -72,6 +72,21 @@ export default async function CategoryPage({ params }: { params: Params }) {
         </div>
       </header>
 
+      {members.length === 0 ? (
+        <div className="mt-10 border border-dashed border-[var(--color-rule-strong)] p-12 text-center">
+          <p className="text-[0.9375rem] text-[var(--color-ink-muted)]">
+            No skill has been published in this category yet.
+          </p>
+          <p className="label mt-2">The category is part of the taxonomy; the coverage is not there</p>
+          <Link
+            href="/contribute"
+            className="mt-5 inline-block border border-[var(--color-ink)] bg-[var(--color-ink)] px-4 py-2 font-mono text-[0.75rem] tracking-[0.06em] text-[var(--color-paper)] transition-opacity hover:opacity-90"
+          >
+            ADD THE FIRST ONE
+          </Link>
+        </div>
+      ) : null}
+
       {layerKeys.map((layerKey) => {
         const group = byLayer.get(layerKey)!;
         return (

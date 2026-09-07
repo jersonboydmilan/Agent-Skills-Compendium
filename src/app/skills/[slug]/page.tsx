@@ -7,7 +7,6 @@ import { toJson, toYaml } from "@/lib/export";
 import {
   BUILD_SPEED_LABEL,
   COMPLEXITY_LABEL,
-  LAYER_NAMES,
   LAYER_VAR,
   MATURITY_LABEL,
   RISK_LABEL,
@@ -135,6 +134,30 @@ export default async function SkillPage({ params }: { params: Params }) {
   const requiredInputs = skill.inputs.filter((i) => i.required);
   const optionalInputs = skill.inputs.filter((i) => !i.required);
 
+  // Optional sections are omitted when a definition has nothing to put in them,
+  // so the rail is derived from what was rendered rather than from the schema.
+  const sections: [string, string][] = [
+    ["purpose", "Purpose"],
+    ["trigger", "Trigger"],
+    ["inputs", "Inputs"],
+    ...(skill.tools.length || skill.dependencies.length
+      ? ([["tools", "Tools"]] as [string, string][])
+      : []),
+    ["procedure", "Procedure"],
+    ...(skill.decision_rules.length
+      ? ([["decision-rules", "Decision rules"]] as [string, string][])
+      : []),
+    ["outputs", "Outputs"],
+    ["validation", "Validation"],
+    ["failure-modes", "Failure modes"],
+    ...(skill.escalation.length ? ([["escalation", "Escalation"]] as [string, string][]) : []),
+    ...(skill.examples.length ? ([["examples", "Examples"]] as [string, string][]) : []),
+    ...(groups.length || inverse.length
+      ? ([["related", "Related skills"]] as [string, string][])
+      : []),
+    ["export", "Export"],
+  ];
+
   return (
     <article className="mx-auto max-w-[1180px] px-5 py-12">
       <ViewTracker
@@ -238,7 +261,9 @@ export default async function SkillPage({ params }: { params: Params }) {
             />
           </Section>
 
+          {skill.tools.length || skill.dependencies.length ? (
           <Section id="tools" title="Tools" note={`${skill.tools.length} registered`}>
+            {skill.tools.length ? (
             <ul className="grid gap-px border border-[var(--color-rule)] bg-[var(--color-rule)] sm:grid-cols-2">
               {skill.tools.map((id) => {
                 const tool = toolById.get(id);
@@ -253,6 +278,7 @@ export default async function SkillPage({ params }: { params: Params }) {
                 );
               })}
             </ul>
+            ) : null}
             {skill.dependencies.length ? (
               <div className="mt-4">
                 <Label>Dependencies</Label>
@@ -264,6 +290,7 @@ export default async function SkillPage({ params }: { params: Params }) {
               </div>
             ) : null}
           </Section>
+          ) : null}
 
           <Section id="procedure" title="Procedure" note={`${skill.procedure.length} steps`}>
             <ol className="divide-y divide-[var(--color-rule)] border border-[var(--color-rule)]">
@@ -436,12 +463,14 @@ export default async function SkillPage({ params }: { params: Params }) {
             <p className="mt-4 max-w-[70ch] text-[0.875rem] leading-relaxed text-[var(--color-ink-muted)]">
               The YAML form is identical in shape to the source file, so a downloaded definition can
               be dropped into a content directory unchanged. The same document is served at{" "}
-              <Link
+              <a
                 href={`/api/skills/${skill.slug}/export?format=yaml`}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="font-mono text-[var(--color-accent)]"
               >
                 /api/skills/{skill.slug}/export
-              </Link>
+              </a>
               .
             </p>
           </Section>
@@ -452,21 +481,7 @@ export default async function SkillPage({ params }: { params: Params }) {
           <nav aria-label="On this page" className="border border-[var(--color-rule)] p-4">
             <Label>On this page</Label>
             <ul className="mt-3 space-y-1.5">
-              {[
-                ["purpose", "Purpose"],
-                ["trigger", "Trigger"],
-                ["inputs", "Inputs"],
-                ["tools", "Tools"],
-                ["procedure", "Procedure"],
-                ["decision-rules", "Decision rules"],
-                ["outputs", "Outputs"],
-                ["validation", "Validation"],
-                ["failure-modes", "Failure modes"],
-                ["escalation", "Escalation"],
-                ["examples", "Examples"],
-                ["related", "Related skills"],
-                ["export", "Export"],
-              ].map(([id, label]) => (
+              {sections.map(([id, label]) => (
                 <li key={id}>
                   <a
                     href={`#${id}`}
@@ -533,7 +548,7 @@ export default async function SkillPage({ params }: { params: Params }) {
           ) : null}
 
           <div className="mt-4">
-            <ArrowLink href="/compose">Compose with this skill</ArrowLink>
+            <ArrowLink href={`/compose?skills=${skill.slug}`}>Compose with this skill</ArrowLink>
           </div>
         </aside>
       </div>

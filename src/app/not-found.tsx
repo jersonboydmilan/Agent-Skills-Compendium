@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Label } from "@/components/primitives";
+
+export const metadata: Metadata = {
+  title: "Not found",
+  robots: { index: false, follow: true },
+};
 
 export default function NotFound() {
   return (

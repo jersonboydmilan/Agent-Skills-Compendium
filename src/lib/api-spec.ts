@@ -48,7 +48,7 @@ export const ENDPOINTS: ApiEndpoint[] = [
       { name: "view", type: "full", description: "Return complete skill definitions rather than summaries." },
     ],
     example: "/api/skills?layer=L5&maturity=production",
-    returns: "{ count, total, filters, skills[] }",
+    returns: "{ count, total, filters, skills[] } — 400 with { error } naming the accepted values if a closed-vocabulary parameter is misspelled.",
   },
   {
     method: "GET",
@@ -100,6 +100,16 @@ export const ENDPOINTS: ApiEndpoint[] = [
     params: [],
     example: "/api/layers",
     returns: "{ count, layers[] }",
+  },
+  {
+    method: "GET",
+    path: "/api/schema",
+    summary: "The canonical JSON Schema",
+    description:
+      "The JSON Schema every published definition validates against, generated from the same source of truth the application renders from. Fetch it to validate a definition you wrote without cloning the repository.",
+    params: [],
+    example: "/api/schema",
+    returns: "JSON Schema draft-07 document",
   },
   {
     method: "GET",

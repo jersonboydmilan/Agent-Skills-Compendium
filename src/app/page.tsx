@@ -18,13 +18,15 @@ export default async function HomePage() {
     .sort((a, b) => b.build_speed - a.build_speed || a.name.localeCompare(b.name))
     .slice(0, 6);
 
-  const functions = [
-    { label: "Decide", layer: "L1", href: "/layers/cognitive" },
-    { label: "Find out", layer: "L2", href: "/layers/knowledge" },
-    { label: "Build & ship", layer: "L3", href: "/layers/action" },
-    { label: "Apply expertise", layer: "L4", href: "/layers/domain" },
-    { label: "Run agents", layer: "L5", href: "/layers/agentic" },
-  ] as const;
+  // The plain-language reading of each layer. A first-time visitor is looking for
+  // work to get done, not for an architecture.
+  const FUNCTION: Record<string, string> = {
+    L1: "Decide",
+    L2: "Find out",
+    L3: "Build & ship",
+    L4: "Apply expertise",
+    L5: "Run agents",
+  };
 
   return (
     <div className="mx-auto max-w-[1180px] px-5">
@@ -119,7 +121,7 @@ export default async function HomePage() {
         <SectionHeading
           eyebrow="Architecture"
           title="Five architectural layers"
-          lead="Every skill belongs to one primary layer. The layer tells you what kind of thing can go wrong and what verification is appropriate."
+          lead="Every skill belongs to one primary layer. Start from the kind of work you need done — the layer also tells you what can go wrong there and what verification is appropriate."
           action={<ArrowLink href="/layers">All layers</ArrowLink>}
         />
         <div className="grid gap-px border border-[var(--color-rule)] bg-[var(--color-rule)] lg:grid-cols-5">
@@ -139,7 +141,10 @@ export default async function HomePage() {
                 <div className="mt-4">
                   <LayerTag layer={layer.id} withName={false} />
                 </div>
-                <h3 className="mt-2 text-lg font-medium tracking-[-0.01em]">{layer.name}</h3>
+                <h3 className="mt-2 text-lg font-medium tracking-[-0.01em]">
+                  {FUNCTION[layer.id]}
+                </h3>
+                <p className="label mt-1">{layer.name}</p>
                 <p className="mt-2 text-[0.875rem] leading-relaxed text-[var(--color-ink-muted)]">
                   {layer.tagline}
                 </p>
@@ -193,30 +198,6 @@ export default async function HomePage() {
         <div className="grid gap-px border border-[var(--color-rule)] bg-[var(--color-rule)] sm:grid-cols-2 lg:grid-cols-3">
           {featured.map((skill) => (
             <SkillCard key={skill.slug} skill={skill} category={byCategory.get(skill.category)} />
-          ))}
-        </div>
-      </section>
-
-      {/* Explore by function */}
-      <section className="py-16" id="by-function">
-        <SectionHeading
-          eyebrow="Explore by function"
-          title="Start from what you need done"
-          lead="Layers are an architecture. This is the same set read as a question about work."
-        />
-        <div className="grid gap-px border border-[var(--color-rule)] bg-[var(--color-rule)] sm:grid-cols-2 lg:grid-cols-5">
-          {functions.map((fn) => (
-            <Link
-              key={fn.label}
-              href={fn.href}
-              className="bg-[var(--color-surface)] p-5 transition-colors hover:bg-[var(--color-raised)]"
-            >
-              <Label>{fn.layer}</Label>
-              <span className="mt-2 block text-base font-medium">{fn.label}</span>
-              <span className="label mt-3 block">
-                {skills.filter((s) => s.layer === fn.layer).length} skills
-              </span>
-            </Link>
           ))}
         </div>
       </section>

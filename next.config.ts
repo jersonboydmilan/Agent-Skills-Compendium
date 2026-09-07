@@ -6,8 +6,9 @@ const config: NextConfig = {
   // Pin the trace root: a lockfile in a parent directory otherwise makes Next
   // guess wrong about where this project starts.
   outputFileTracingRoot: join(process.cwd()),
-  // Content is read from disk at build time; keep the YAML tree traceable.
-  outputFileTracingIncludes: { "/**": ["./content/**/*"] },
+  // Content and the generated schema are read from disk at request time; keep
+  // both traceable so a standalone deployment ships them.
+  outputFileTracingIncludes: { "/**": ["./content/**/*", "./schema/*.json"] },
 };
 
 export default config;

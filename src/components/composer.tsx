@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { track } from "@/lib/analytics";
 import { LAYER_VAR } from "@/lib/format";
+import { orderSelection } from "@/lib/relations";
 import type { LayerId } from "@/lib/schema";
 
 export interface ComposerNode {
@@ -28,34 +30,49 @@ interface Props {
   nodes: ComposerNode[];
 }
 
-function orderByPrerequisites(selected: string[], byId: Map<string, ComposerNode>): string[] {
-  const done = new Set<string>();
-  const out: string[] = [];
-  const visiting = new Set<string>();
-
-  const visit = (slug: string) => {
-    if (done.has(slug) || visiting.has(slug)) return;
-    visiting.add(slug);
-    const node = byId.get(slug);
-    if (node) {
-      for (const pre of node.prerequisites) if (selected.includes(pre)) visit(pre);
-    }
-    visiting.delete(slug);
-    done.add(slug);
-    out.push(slug);
-  };
-
-  for (const slug of selected) visit(slug);
-  return out;
-}
+const DEFAULT_NAME = "Untitled workflow";
 
 export function Composer({ nodes }: Props) {
   const byId = useMemo(() => new Map(nodes.map((n) => [n.slug, n])), [nodes]);
-  const [selected, setSelected] = useState<string[]>([]);
-  const [query, setQuery] = useState("");
-  const [name, setName] = useState("Untitled workflow");
+  const params = useSearchParams();
 
-  const ordered = useMemo(() => orderByPrerequisites(selected, byId), [selected, byId]);
+  // The URL is the workflow: a composition survives a refresh, can be sent to
+  // someone else, and can be deep-linked from a skill page. It is read once on
+  // mount — after that this component owns the address bar.
+  const [{ known, unknown }] = useState(() => {
+    const requested = (params.get("skills") ?? "")
+      .split(",")
+      .map((slug) => slug.trim())
+      .filter(Boolean);
+    const known: string[] = [];
+    const unknown: string[] = [];
+    for (const slug of new Set(requested)) (byId.has(slug) ? known : unknown).push(slug);
+    return { known, unknown };
+  });
+
+  const [selected, setSelected] = useState<string[]>(known);
+  const [query, setQuery] = useState("");
+  const [name, setName] = useState(() => params.get("name")?.slice(0, 120) || DEFAULT_NAME);
+  const [copied, setCopied] = useState<"ok" | "failed" | null>(null);
+
+  // Mirror state into the URL without a server round trip or a history entry.
+  useEffect(() => {
+    const next = new URLSearchParams(window.location.search);
+    if (selected.length) next.set("skills", selected.join(","));
+    else next.delete("skills");
+    if (name.trim() && name !== DEFAULT_NAME) next.set("name", name.trim());
+    else next.delete("name");
+    const qs = next.toString();
+    const url = `${window.location.pathname}${qs ? `?${qs}` : ""}`;
+    if (url !== `${window.location.pathname}${window.location.search}`) {
+      window.history.replaceState(null, "", url);
+    }
+  }, [selected, name]);
+
+  const ordered = useMemo(
+    () => orderSelection(selected, (slug) => byId.get(slug)?.prerequisites ?? []),
+    [selected, byId],
+  );
   const orderedNodes = ordered.map((s) => byId.get(s)!).filter(Boolean);
 
   const missingPrereqs = useMemo(() => {
@@ -140,13 +157,32 @@ export function Composer({ nodes }: Props) {
 
   const json = JSON.stringify(spec, null, 2);
 
+  const flash = useRef<number | undefined>(undefined);
   const copySpec = async () => {
+    window.clearTimeout(flash.current);
     try {
       await navigator.clipboard.writeText(json);
+      setCopied("ok");
       track({ name: "composer_export", count: orderedNodes.length });
     } catch {
-      /* clipboard unavailable; the spec is displayed below for manual selection */
+      // Clipboard blocked (insecure context, or the user denied it). The full
+      // specification is already on the page, so say so rather than failing mutely.
+      setCopied("failed");
     }
+    flash.current = window.setTimeout(() => setCopied(null), 3000);
+  };
+
+  const downloadSpec = () => {
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = `${(name.trim() || DEFAULT_NAME).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}.json`;
+    document.body.append(anchor);
+    anchor.click();
+    anchor.remove();
+    URL.revokeObjectURL(url);
+    track({ name: "composer_export", count: orderedNodes.length });
   };
 
   const button =
@@ -231,20 +267,53 @@ export function Composer({ nodes }: Props) {
               className="mt-1 w-full bg-transparent text-lg font-medium tracking-[-0.01em] outline-none"
             />
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <button type="button" className={button} onClick={copySpec} disabled={!selected.length}>
-              COPY SPEC
+              {copied === "ok" ? "COPIED" : "COPY SPEC"}
             </button>
             <button
               type="button"
               className={button}
-              onClick={() => setSelected([])}
+              onClick={downloadSpec}
+              disabled={!selected.length}
+            >
+              ↓ .JSON
+            </button>
+            <button
+              type="button"
+              className={button}
+              onClick={() => {
+                setSelected([]);
+                setName(DEFAULT_NAME);
+              }}
               disabled={!selected.length}
             >
               CLEAR
             </button>
           </div>
         </div>
+
+        <p aria-live="polite" className="sr-only">
+          {copied === "ok" ? "Specification copied to the clipboard." : ""}
+          {copied === "failed" ? "Could not reach the clipboard." : ""}
+        </p>
+        {copied === "failed" ? (
+          <p className="mt-2 text-[0.875rem] text-[var(--color-ink-muted)]">
+            Your browser would not give this page the clipboard. The full specification is printed
+            below — select it there, or use ↓ .JSON to save it.
+          </p>
+        ) : null}
+
+        {unknown.length ? (
+          <div className="mt-4 border border-[var(--color-rule-strong)] bg-[var(--color-raised)] p-4">
+            <span className="label">Skipped</span>
+            <p className="mt-2 text-[0.875rem] text-[var(--color-ink-muted)]">
+              This link named {unknown.length === 1 ? "a skill" : "skills"} that are not in the
+              registry, so {unknown.length === 1 ? "it was" : "they were"} left out:{" "}
+              <span className="font-mono">{unknown.join(", ")}</span>.
+            </p>
+          </div>
+        ) : null}
 
         {missingPrereqs.length ? (
           <div className="mt-4 border border-[var(--color-accent)]/40 bg-[var(--color-accent-soft)] p-4">
@@ -275,7 +344,7 @@ export function Composer({ nodes }: Props) {
               Add skills to compose a workflow.
             </p>
             <p className="label mt-2">
-              Prerequisites are resolved automatically and ordered for execution
+              Pick one on the left — prerequisites are resolved and ordered for you
             </p>
           </div>
         ) : (
@@ -327,8 +396,8 @@ export function Composer({ nodes }: Props) {
             <div className="flex items-baseline justify-between gap-4">
               <span className="label">Agent specification</span>
               <span className="label">
-                {spec.workflow.steps.length} steps · aggregate risk{" "}
-                {spec.workflow.aggregate_risk_level}
+                {spec.workflow.steps.length} {spec.workflow.steps.length === 1 ? "step" : "steps"} ·
+                aggregate risk {spec.workflow.aggregate_risk_level}
               </span>
             </div>
             <pre className="mt-2 max-h-[26rem] overflow-auto border border-[var(--color-rule)] bg-[var(--color-raised)] p-4 font-mono text-[0.75rem] leading-relaxed">

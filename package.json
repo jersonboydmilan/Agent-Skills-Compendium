@@ -7,11 +7,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "validate:content": "tsx scripts/validate-content.ts",
     "generate:schema": "tsx scripts/generate-schema.ts",
-    "export:skills": "tsx scripts/export-skill-md.ts"
+    "export:skills": "tsx scripts/export-skill-md.ts",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "check": "npm run typecheck && npm run lint && npm run validate:content && npm test"
   },
   "dependencies": {
     "next": "15.5.4",
@@ -21,11 +23,14 @@
     "zod": "3.25.76"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.7",
     "@tailwindcss/postcss": "4.1.14",
     "@types/node": "24.5.2",
     "@types/react": "19.1.13",
     "@types/react-dom": "19.1.9",
     "ajv": "^8.20.0",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^15.5.4",
     "tailwindcss": "4.1.14",
     "tsx": "4.20.6",
     "typescript": "5.9.2",
