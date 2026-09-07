@@ -7,7 +7,7 @@ Copyright © 2026 Jerson Boyd Milan
 
 Direction, not promises. The framework is at `v0.1` — stable enough to build against, and
 expected to move. Items here are open to contribution; the ones marked 🙌 are good places
-to start, and most are issues waiting to be written up rather than work already underway.
+to start. Where an item has an issue, it is linked — take one by commenting on it.
 
 ## Now — the registry itself
 
@@ -16,7 +16,10 @@ domain.
 
 - **More skills, at the current depth.** 76 today across 20 categories. The bar is
   [docs/SKILL_AUTHORING.md](docs/SKILL_AUTHORING.md), not volume — a category with four
-  well-specified skills is worth more than one with twenty thin ones. 🙌
+  well-specified skills is worth more than one with twenty thin ones. Three categories sit
+  at two skills each — [#12](../../issues/12). 🙌
+- **A scaffold for new definitions**, so authoring does not start by copying and deleting
+  someone else's skill — [#11](../../issues/11). 🙌
 - **Corrections from practitioners.** A failure mode that is not real, a validation check
   that cannot be checked, a procedure that is not how the work is actually done. These are
   the most valuable pull requests the project can receive. 🙌
@@ -28,14 +31,15 @@ domain.
 - **Worked evaluation results.** The [evaluation framework](evaluation/evaluation-framework.md)
   defines nine scored dimensions and the validity conditions for a reportable result.
   Applying it to real skills and publishing the scores would turn a framework into
-  evidence.
+  evidence — [#13](../../issues/13).
 - **Governance conformance checking.** [`governance-schema.yaml`](governance/governance-schema.yaml)
   describes risk classification, permission scoping and approval triggers. A checker that
   reads a definition and reports whether its declared permissions match what its procedure
-  actually needs is a self-contained, testable contribution. 🙌
+  actually needs is a self-contained, testable contribution. The first step — enforcing the
+  admission rules the project already states — is [#10](../../issues/10). 🙌
 - **Cross-registry interoperability.** [docs/INTEROPERABILITY.md](docs/INTEROPERABILITY.md)
-  positions the specification against MCP and `SKILL.md`. Importers and exporters for other
-  formats keep definitions portable rather than captive.
+  positions the specification against MCP and `SKILL.md`. Export is one-directional today;
+  an importer would close the loop — [#14](../../issues/14).
 
 ## Later — deliberately out of scope for now
 
@@ -55,7 +59,7 @@ domain.
 Honest list of things the current build does not do:
 
 - Analytics events are queued on `window.__skillCompendiumEvents` for a collector to
-  drain. No vendor is wired up.
+  drain. No vendor is wired up, and nothing drains the queue — [#15](../../issues/15).
 - Typography uses system font stacks rather than a licensed webfont, so the build has no
   network dependency.
 - The framework version is `0.1`; the API contract may still change with a minor bump.
