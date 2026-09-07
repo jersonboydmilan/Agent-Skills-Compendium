@@ -44,21 +44,37 @@ export function SearchDialog({ entries }: { entries: SearchEntry[] }) {
       .map((r) => r.entry);
   }, [query, entries]);
 
+  // The dialog always opens on an empty query with the first row highlighted, and
+  // leaves that way. Resetting here rather than in an effect keeps the state
+  // change in the interaction that caused it, so opening costs one render.
+  const openDialog = useCallback(() => {
+    setQuery("");
+    setActive(0);
+    setOpen(true);
+  }, []);
+
+  const closeDialog = useCallback(() => {
+    setQuery("");
+    setActive(0);
+    setOpen(false);
+  }, []);
+
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
         event.preventDefault();
+        setQuery("");
+        setActive(0);
         setOpen((v) => !v);
       }
-      if (event.key === "Escape") setOpen(false);
+      if (event.key === "Escape") closeDialog();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, []);
+  }, [closeDialog]);
 
   useEffect(() => {
     if (open) {
-      setActive(0);
       requestAnimationFrame(() => inputRef.current?.focus());
       // Hold the page still behind the dialog, and give it back afterwards.
       // The scroll container is the root element, not body.
@@ -69,7 +85,6 @@ export function SearchDialog({ entries }: { entries: SearchEntry[] }) {
         root.style.overflow = previous;
       };
     }
-    setQuery("");
     openerRef.current?.focus();
   }, [open]);
 
@@ -81,10 +96,10 @@ export function SearchDialog({ entries }: { entries: SearchEntry[] }) {
   const commit = useCallback(
     (href: string) => {
       track({ name: "skill_search", query, results: results.length });
-      setOpen(false);
+      closeDialog();
       router.push(href);
     },
-    [query, results.length, router],
+    [closeDialog, query, results.length, router],
   );
 
   const optionId = (i: number) => `search-option-${i}`;
@@ -94,7 +109,7 @@ export function SearchDialog({ entries }: { entries: SearchEntry[] }) {
       <button
         ref={openerRef}
         type="button"
-        onClick={() => setOpen(true)}
+        onClick={openDialog}
         className="flex shrink-0 items-center gap-2 border border-[var(--color-rule)] bg-[var(--color-surface)] px-3 py-1.5 text-left font-mono text-[0.75rem] whitespace-nowrap text-[var(--color-ink-faint)] transition-colors hover:border-[var(--color-rule-strong)]"
         aria-label="Search skills, categories and layers"
         aria-haspopup="dialog"
@@ -113,7 +128,7 @@ export function SearchDialog({ entries }: { entries: SearchEntry[] }) {
           aria-modal="true"
           aria-label="Search the registry"
           onClick={(e) => {
-            if (e.target === e.currentTarget) setOpen(false);
+            if (e.target === e.currentTarget) closeDialog();
           }}
         >
           <div
