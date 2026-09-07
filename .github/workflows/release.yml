@@ -1,0 +1,74 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing tag to build a release from (e.g. v0.2.0)
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Verify, package and publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.inputs.tag || github.ref }}
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22.x
+          cache: npm
+
+      - run: npm ci
+
+      # A tag is not a release until it passes what main has to pass.
+      - name: Verify
+        run: npm run check
+
+      - name: Build
+        run: npm run build
+
+      # The packages people consume without cloning: SKILL.md for every skill,
+      # and the JSON Schema a definition validates against.
+      - name: Package the registry
+        run: |
+          npm run export:skills
+          npm run generate:schema
+          VERSION="${{ github.event.inputs.tag || github.ref_name }}"
+          mkdir -p release
+          tar -czf "release/agent-skills-compendium-${VERSION}-skill-md.tar.gz" -C dist skills
+          cp schema/skill.schema.json schema/skill.schema.yaml release/
+          ls -la release
+
+      - name: Extract this version's changelog section
+        id: notes
+        run: |
+          VERSION="${{ github.event.inputs.tag || github.ref_name }}"
+          # Everything between this version's heading and the next `## [` heading.
+          awk -v v="${VERSION#v}" '
+            $0 ~ "^## \\[" v "\\]" { on = 1; next }
+            on && /^## \[/ { exit }
+            on { print }
+          ' CHANGELOG.md > release-notes.md
+          if [ ! -s release-notes.md ]; then
+            echo "::error::CHANGELOG.md has no section for ${VERSION}. Add one before tagging."
+            exit 1
+          fi
+          cat release-notes.md
+
+      - name: Publish the release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.tag || github.ref_name }}
+          body_path: release-notes.md
+          files: |
+            release/agent-skills-compendium-*-skill-md.tar.gz
+            release/skill.schema.json
+            release/skill.schema.yaml

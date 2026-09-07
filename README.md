@@ -57,8 +57,9 @@ A skill may invoke several tools to produce a validated outcome.
 |---|---|---|
 | [📐 Where this sits](#-where-this-sits) | [🚫 What this is not](#-what-this-is-not) | [✍️ Authorship](#️-authorship) |
 | [📦 What is here](#-what-is-here) | [⚡ Running it](#-running-it) | [🏛️ Architecture](#️-architecture) |
-| [🔌 Machine interface](#-machine-interface) | [➕ Adding a skill](#-adding-a-skill) | [🗒️ Notes on the current build](#️-notes-on-the-current-build) |
-| [🖥️ Interface](#️-interface) | [🧱 Frameworks](#-frameworks) | [📄 Project documents](#-project-documents) |
+| [🔌 Machine interface](#-machine-interface) | [🎬 **Examples**](#-examples) | [➕ Adding a skill](#-adding-a-skill) |
+| [🗒️ Notes on the current build](#️-notes-on-the-current-build) | [🖥️ Interface](#️-interface) | [🧱 Frameworks](#-frameworks) |
+| [🙌 Contributing](#-contributing) | [📄 Project documents](#-project-documents) | [🗺️ Roadmap](ROADMAP.md) |
 
 ## 📐 Where this sits
 
@@ -156,9 +157,23 @@ should escalate, what it produces, and which skills it connects to.
 ## ⚡ Running it
 
 ```bash
+git clone https://github.com/jersonboydmilan/Agent-Skills-Compendium.git
+cd Agent-Skills-Compendium
 npm install
-npm run dev
+npm run dev          # http://localhost:3000
 ```
+
+Requires Node 20 or newer. There is no database, no API key and no environment file —
+the registry is YAML on disk, read at request time.
+
+Five minutes well spent, once it is up:
+
+| | |
+|---|---|
+| 🔍 | Press <kbd>⌘K</kbd> anywhere and search skills, categories and layers |
+| 📄 | Open any skill and read the whole specification, then copy its YAML |
+| 🧩 | Open [`/compose`](http://localhost:3000/compose), select three skills, and watch prerequisites resolve and order themselves |
+| 📡 | `curl localhost:3000/api/skills?layer=L5&risk=high` — the filters the UI uses, as JSON |
 
 Other scripts:
 
@@ -247,6 +262,177 @@ npx ajv validate -s skill.schema.json -d skill.json
 YAML export is round-trippable: the exported document has the same shape as the source file
 and re-validates against the schema unchanged.
 
+## 🎬 Examples
+
+### What a definition actually looks like
+
+An excerpt from [`content/skills/source-credibility-assessment.yaml`](content/skills/source-credibility-assessment.yaml).
+The parts that make it a skill rather than a prompt are the ones most registries leave
+out — decision rules, validation, failure modes with mitigations, and escalation.
+
+```yaml
+skill:
+  name: Source Credibility Assessment
+  layer: L2
+  purpose: >-
+    Retrieval systems rank by relevance, not by trustworthiness, so an agent that
+    treats retrieval order as credibility order will confidently repeat a
+    marketing page or a content farm.
+  trigger: >-
+    Before any retrieved source is used to support a claim in a deliverable, and
+    whenever two sources disagree.
+
+  decision_rules:
+    - condition: The publisher sells the thing the claim endorses
+      action: Cap trust at low and label the claim vendor-sourced.
+    - condition: No author, no date and no citations are present
+      action: Reject the source for material claims regardless of apparent plausibility.
+
+  validation:
+    - check: The verdict is stated relative to the specific claim, not to the publication in general.
+    - check: Every deduction in the rationale names an observable property of the source.
+
+  failure_modes:
+    - failure: Circular corroboration from three restatements of one origin.
+      mitigation: Resolve the origin chain first; deduplicate by origin before counting.
+
+  escalation:
+    - condition: The only available sources for a material claim all score low.
+      action: Report the claim as unestablished and escalate the sourcing gap rather than lowering the bar.
+
+  risk_level: low
+  required_permissions: [web.read]
+  restricted_actions: [Bypassing paywalls, Circumventing access controls to inspect a source]
+```
+
+Ten more fields are omitted here — inputs, tools, the procedure, outputs, worked examples
+and the relationship graph. The [full file](content/skills/source-credibility-assessment.yaml)
+is 150 lines, and every one of the 76 is specified to the same depth.
+
+### Ask the registry a question
+
+```bash
+curl -s 'localhost:3000/api/skills?layer=L5&risk=high' | jq '{count, total, skills: [.skills[].slug]}'
+```
+
+```json
+{
+  "count": 5,
+  "total": 76,
+  "skills": [
+    "agent-role-design",
+    "autonomy-staging",
+    "dry-run-rehearsal",
+    "llm-judge-calibration",
+    "release-readiness-check"
+  ]
+}
+```
+
+A misspelled facet value answers with `400` and the vocabulary, rather than an empty list
+that reads as "no such skill":
+
+```bash
+curl -s 'localhost:3000/api/skills?risk=hgih'
+# {"error":"Unknown risk value \"hgih\". Accepted: low, medium, high, critical."}
+```
+
+### Follow the graph
+
+Every skill declares prerequisites, complements and successors, and the API resolves the
+inverse edges too — so you can ask what depends on a skill, not only what it depends on.
+
+```bash
+curl -s localhost:3000/api/skills/prompt-injection-defense/related \
+  | jq '[.groups[] | {relation, skills: [.skills[].slug]}]'
+```
+
+```json
+[
+  {
+    "relation": "complementary",
+    "skills": ["tool-permission-scoping", "agent-red-teaming", "secure-code-review"]
+  },
+  {
+    "relation": "successors",
+    "skills": ["agent-red-teaming", "autonomy-staging"]
+  },
+  {
+    "relation": "related",
+    "skills": ["source-credibility-assessment", "memory-hygiene"]
+  }
+]
+```
+
+### Drive an agent from a definition
+
+The definitions are data, so this is the whole integration. Nothing here is
+Compendium-specific beyond the two URLs.
+
+```ts
+const REGISTRY = "http://localhost:3000";
+
+// 1. Find candidates for the situation the agent is actually in.
+const { skills } = await fetch(
+  `${REGISTRY}/api/skills?q=untrusted+content&layer=L5`,
+).then((r) => r.json());
+
+// 2. Pull the full definition of the one you picked.
+const { skill } = await fetch(`${REGISTRY}/api/skills/${skills[0].slug}`).then((r) =>
+  r.json(),
+);
+
+// 3. Honour the governance surface before anything executes. The registry states
+//    what a skill may not do; enforcing it is the runtime's job, deliberately.
+if (!hasPermissions(skill.required_permissions)) {
+  return escalate(skill.escalation);
+}
+
+// 4. The procedure is the plan. `validation` is the exit test — a run that cannot
+//    satisfy every check has not succeeded, whatever the model reports.
+for (const step of skill.procedure) await run(step);
+return skill.validation.every(check);
+```
+
+### Compose a workflow
+
+Selection and workflow name live in the query string, so a composition is a link:
+
+```
+/compose?skills=source-credibility-assessment,evidence-synthesis,competitive-intelligence-report
+```
+
+The composer resolves prerequisites, orders the chain so nothing runs before its
+precondition, aggregates the permissions and tools the whole workflow needs, reports the
+highest risk level in it, and exports the result as an agent specification. It plans; it
+does not execute.
+
+### Export the registry into your own agent
+
+```bash
+npm run export:skills     # dist/skills/<category>/<slug>/SKILL.md — all 76
+```
+
+```markdown
+---
+name: source-credibility-assessment
+description: Classify a source by class, independence, incentive and recency, and
+  assign a defensible trust score before its content is used.
+version: 1.1.0
+category: research_intelligence
+layer: L2
+risk: low
+license: MIT
+---
+
+# Source Credibility Assessment
+```
+
+Each definition carries `license: MIT` in its own metadata, so a skill extracted from the
+registry travels with its license attached. YAML export is round-trippable: the exported
+document has the same shape as the source file and re-validates against the schema
+unchanged.
+
 ## ➕ Adding a skill
 
 1. Copy an existing definition (every skill page exposes its YAML).
@@ -255,7 +441,30 @@ and re-validates against the schema unchanged.
 4. Version it. New skills start at `1.0.0`. A procedure change is a minor bump; a change to
    inputs, outputs or validation is a major bump, because it breaks consumers.
 
-The full admission standard is at `/contribute`.
+[**docs/SKILL_AUTHORING.md**](docs/SKILL_AUTHORING.md) is the practical guide — what each
+field is for, the failure each admission rule prevents, worked ✅/❌ pairs for the fields
+that get sent back in review, and a complete minimal skill that validates as written. The
+same standard is rendered at `/contribute` in the running application.
+
+The one question that decides admission: **can you state how the skill knows it
+succeeded?** If not, it is a prompt.
+
+## 🙌 Contributing
+
+The most valuable contribution is not a new skill — it is a correction to an existing one
+from someone who does the work. A failure mode that is not real, a validation check that
+cannot be checked, a procedure that is not how it is actually done: those pull requests
+are the ones that make the registry worth consuming.
+
+| | |
+|---|---|
+| 🤝 [CONTRIBUTING.md](CONTRIBUTING.md) | Setup, the admission rules, the workflow, what review looks for |
+| ✍️ [docs/SKILL_AUTHORING.md](docs/SKILL_AUTHORING.md) | How to write a definition that passes |
+| 🗺️ [ROADMAP.md](ROADMAP.md) | Where this is going, and which parts are open |
+| 📦 [RELEASING.md](RELEASING.md) | How versions are cut, and what a version number means |
+
+Everything runs locally with `npm install && npm run dev` — no database, no API key, no
+environment file. `npm run check` is exactly what CI runs.
 
 ## 🗒️ Notes on the current build
 
@@ -358,7 +567,10 @@ npm run export:skills     # dist/skills/**/SKILL.md packages
 | 🔗 | [PROVENANCE.md](PROVENANCE.md) | Origin, attribution policy, verification status |
 | 🎓 | [CITATION.cff](CITATION.cff) | Machine-readable citation metadata |
 | 📝 | [CHANGELOG.md](CHANGELOG.md) | Release history |
-| 🤝 | [CONTRIBUTING.md](CONTRIBUTING.md) | How to contribute a skill |
+| 🤝 | [CONTRIBUTING.md](CONTRIBUTING.md) | Setup, admission rules, workflow, review standard |
+| ✍️ | [docs/SKILL_AUTHORING.md](docs/SKILL_AUTHORING.md) | Field-by-field guide to writing a definition |
+| 🗺️ | [ROADMAP.md](ROADMAP.md) | Direction, and which parts are open to contribution |
+| 📦 | [RELEASING.md](RELEASING.md) | Release cadence, versioning policy, release contents |
 | 📜 | [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) | Community standards and enforcement |
 | 🔐 | [SECURITY.md](SECURITY.md) | Vulnerability reporting, scope and threat model |
 | ⚖️ | [LICENSE](LICENSE) | MIT License |

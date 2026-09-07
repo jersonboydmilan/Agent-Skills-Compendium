@@ -14,6 +14,30 @@ project uses [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- Continuous integration: typecheck, lint, content validation and tests on Node
+  20 and 22, a production build, and a check that the generated schema has not
+  drifted from `src/lib/schema.ts`
+- Release workflow — a `v*` tag re-runs the full check against the tag, then
+  publishes a GitHub Release with that version's changelog section, every skill
+  as a `SKILL.md` bundle, and the generated JSON Schema and YAML schema
+- [`docs/SKILL_AUTHORING.md`](docs/SKILL_AUTHORING.md) — field-by-field authoring
+  guide, the failure each admission rule prevents, and a complete minimal skill
+  that validates as written
+- [`RELEASING.md`](RELEASING.md) — release cadence, what a version number means
+  for the framework versus for a single skill, and release contents
+- [`ROADMAP.md`](ROADMAP.md) — direction and the parts open to contribution
+- [`SECURITY.md`](SECURITY.md) — private vulnerability reporting, scope, and the
+  threat model: definitions are untrusted input to an agent
+- [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) — Contributor Covenant 2.1
+- Issue forms for bug reports, skill proposals and enhancements; the skill
+  proposal form asks for validation criteria, failure modes and escalation, so
+  an entry that is really a prompt is visible before review
+- Pull request template, `CODEOWNERS`, and a grouped Dependabot policy for npm
+  and GitHub Actions
+- Worked examples in the README: the anatomy of a real definition, filtered and
+  graph queries against the API with their actual responses, driving an agent
+  from a definition, a shareable composition link, and `SKILL.md` export
+
 - Test suite (`npm test`) covering search scoring and filtering, relationship
   resolution and ordering, export round-tripping, and registry integrity
 - `npm run check` — typecheck, lint, content validation and tests in one command
@@ -26,6 +50,17 @@ project uses [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
+- Next 15.5.4 → 16.3.4, which carries fixes for two critical advisories
+  (unauthenticated RCE on Windows-hosted servers, and RCE in the image
+  optimization API when AVIF is used). `eslint-config-next` 16 publishes flat
+  config directly, so the eslintrc compatibility layer and `@eslint/eslintrc`
+  are gone
+- The search dialog resets its query and highlighted row in the interactions
+  that open and close it, rather than in an effect keyed on `open`, so opening
+  costs one render instead of two
+- `CONTRIBUTING.md` expanded: local setup, the commands CI runs, branch and
+  commit conventions, what review looks for, and where a first contribution is
+  most useful
 - The composer keeps its selection and workflow name in the address bar, so a
   composition survives a refresh and can be shared as a link
 - "Compose with this skill" now opens the composer with that skill selected
