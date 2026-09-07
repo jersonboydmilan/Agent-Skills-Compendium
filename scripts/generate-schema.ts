@@ -32,7 +32,7 @@ delete jsonSchema.$schema;
 
 const annotated = {
   $schema: "http://json-schema.org/draft-07/schema#",
-  $id: "https://github.com/linuxdel/Agent-Skills-Compendium/schema/skill.schema.json",
+  $id: "https://github.com/jersonboydmilan/Agent-Skills-Compendium/schema/skill.schema.json",
   title: "Agent Skill",
   description:
     "The canonical Agent Skill Specification. Generated from src/lib/schema.ts — " +

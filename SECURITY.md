@@ -20,7 +20,7 @@ The Compendium is an open reference framework at `v0.1`. Security fixes land on
 **Do not open a public issue.**
 
 Report privately through GitHub's
-[private vulnerability reporting](https://github.com/linuxdel/Agent-Skills-Compendium/security/advisories/new)
+[private vulnerability reporting](https://github.com/jersonboydmilan/Agent-Skills-Compendium/security/advisories/new)
 on this repository. If that is unavailable to you, contact the maintainer through
 https://jersonboydmilan.com/.
 

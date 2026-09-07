@@ -4,7 +4,7 @@
 
 <br>
 
-[![CI](https://img.shields.io/github/actions/workflow/status/linuxdel/Agent-Skills-Compendium/ci.yml?branch=main&style=for-the-badge&logo=githubactions&logoColor=white&label=CI&labelColor=0b1020&color=22c55e)](https://github.com/linuxdel/Agent-Skills-Compendium/actions/workflows/ci.yml)
+[![CI](https://img.shields.io/github/actions/workflow/status/jersonboydmilan/Agent-Skills-Compendium/ci.yml?branch=main&style=for-the-badge&logo=githubactions&logoColor=white&label=CI&labelColor=0b1020&color=22c55e)](https://github.com/jersonboydmilan/Agent-Skills-Compendium/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-a78bfa?style=for-the-badge&logo=opensourceinitiative&logoColor=white&labelColor=0b1020)](LICENSE)
 [![Version](https://img.shields.io/badge/version-0.1.0-38bdf8?style=for-the-badge&logo=semanticrelease&logoColor=white&labelColor=0b1020)](CHANGELOG.md)
 [![Skills](https://img.shields.io/badge/skills-76-e879f9?style=for-the-badge&logo=databricks&logoColor=white&labelColor=0b1020)](content/skills)

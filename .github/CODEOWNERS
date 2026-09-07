@@ -1,13 +1,13 @@
 # Every change is reviewed by the project author.
-*                       @linuxdel
+*                       @jersonboydmilan
 
 # Attribution, licensing and provenance are not routine edits.
-/LICENSE                @linuxdel
-/COPYRIGHT.md           @linuxdel
-/AUTHORS.md             @linuxdel
-/PROVENANCE.md          @linuxdel
-/CITATION.cff           @linuxdel
+/LICENSE                @jersonboydmilan
+/COPYRIGHT.md           @jersonboydmilan
+/AUTHORS.md             @jersonboydmilan
+/PROVENANCE.md          @jersonboydmilan
+/CITATION.cff           @jersonboydmilan
 
 # The canonical specification. A change here changes every definition.
-/src/lib/schema.ts      @linuxdel
-/schema/                @linuxdel
+/src/lib/schema.ts      @jersonboydmilan
+/schema/                @jersonboydmilan

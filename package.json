@@ -18,13 +18,13 @@
     "nextjs",
     "typescript"
   ],
-  "homepage": "https://github.com/linuxdel/Agent-Skills-Compendium#readme",
+  "homepage": "https://github.com/jersonboydmilan/Agent-Skills-Compendium#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/linuxdel/Agent-Skills-Compendium.git"
+    "url": "git+https://github.com/jersonboydmilan/Agent-Skills-Compendium.git"
   },
   "bugs": {
-    "url": "https://github.com/linuxdel/Agent-Skills-Compendium/issues"
+    "url": "https://github.com/jersonboydmilan/Agent-Skills-Compendium/issues"
   },
   "license": "MIT",
   "author": "Jerson Boyd Milan (https://jersonboydmilan.com/)",

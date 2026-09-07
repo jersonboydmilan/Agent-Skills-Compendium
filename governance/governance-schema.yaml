@@ -10,7 +10,7 @@
 # the skill's own reasoning to stay inside it.
 
 $schema: http://json-schema.org/draft-07/schema#
-$id: https://github.com/linuxdel/Agent-Skills-Compendium/governance/governance-schema.yaml
+$id: https://github.com/jersonboydmilan/Agent-Skills-Compendium/governance/governance-schema.yaml
 title: Skill Governance Policy
 type: object
 additionalProperties: false

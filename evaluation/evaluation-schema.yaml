@@ -5,7 +5,7 @@
 # Companion to evaluation-framework.md. Proposed Compendium Evaluation Scale v0.1.
 
 $schema: http://json-schema.org/draft-07/schema#
-$id: https://github.com/linuxdel/Agent-Skills-Compendium/evaluation/evaluation-schema.yaml
+$id: https://github.com/jersonboydmilan/Agent-Skills-Compendium/evaluation/evaluation-schema.yaml
 title: Skill Evaluation Result
 description: >-
   A single evaluation run of one skill version against one fixed case set.

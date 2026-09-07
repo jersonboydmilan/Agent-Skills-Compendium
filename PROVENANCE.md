@@ -78,7 +78,7 @@ Project provenance is additionally represented through:
 ### Repository history
 
 The public repository was created on **2026-09-01** at
-https://github.com/linuxdel/Agent-Skills-Compendium.
+https://github.com/jersonboydmilan/Agent-Skills-Compendium.
 
 An earlier repository of the same name was created and then deleted and
 recreated on the same day, to remove an incorrect co-author attribution that
@@ -97,7 +97,7 @@ As of **2026-09-01**:
 
 | | |
 |---|---|
-| Repository | https://github.com/linuxdel/Agent-Skills-Compendium |
+| Repository | https://github.com/jersonboydmilan/Agent-Skills-Compendium |
 | Visibility | Public |
 | Default branch | `main` |
 | Root commit | `a49bb37` — created via the GitHub web interface, carries GitHub's signature |
