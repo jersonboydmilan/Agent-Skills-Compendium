@@ -61,6 +61,10 @@ jobs:
             echo "::error::CHANGELOG.md has no section for ${VERSION}. Add one before tagging."
             exit 1
           fi
+          # Relative links work in CHANGELOG.md but not in a release body, which is
+          # not served from a path in the tree. Point them at this tag.
+          REPO_URL="${{ github.server_url }}/${{ github.repository }}" VERSION="$VERSION" \
+            perl -pi -e 's{\]\((?!https?://|#)([^)]+)\)}{"](" . $ENV{REPO_URL} . "/blob/" . $ENV{VERSION} . "/" . $1 . ")"}ge' release-notes.md
           cat release-notes.md
 
       - name: Publish the release
