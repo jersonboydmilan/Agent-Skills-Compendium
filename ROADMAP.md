@@ -5,7 +5,7 @@ Copyright © 2026 Jerson Boyd Milan
 
 # 🗺️ Roadmap
 
-Direction, not promises. The framework is at `v0.1` — stable enough to build against, and
+Direction, not promises. The framework is at `v0.2` — stable enough to build against, and
 expected to move. Items here are open to contribution; the ones marked 🙌 are good places
 to start. Where an item has an issue, it is linked — take one by commenting on it.
 
@@ -62,7 +62,7 @@ Honest list of things the current build does not do:
   drain. No vendor is wired up, and nothing drains the queue — [#15](../../issues/15).
 - Typography uses system font stacks rather than a licensed webfont, so the build has no
   network dependency.
-- The framework version is `0.1`; the API contract may still change with a minor bump.
+- The framework version is `0.2`; the API contract may still change with a minor bump.
 
 ## Proposing something not listed
 

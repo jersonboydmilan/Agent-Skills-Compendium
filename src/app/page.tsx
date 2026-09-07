@@ -32,7 +32,7 @@ export default async function HomePage() {
     <div className="mx-auto max-w-[1180px] px-5">
       {/* Hero */}
       <section className="py-16 sm:py-24">
-        <Label>Capability registry · v0.1</Label>
+        <Label>Capability registry · v0.2</Label>
         <h1 className="mt-5 max-w-4xl text-balance text-4xl font-medium leading-[1.08] tracking-[-0.03em] sm:text-6xl">
           Agent Skills Compendium
         </h1>

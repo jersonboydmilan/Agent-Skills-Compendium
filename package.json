@@ -1,6 +1,6 @@
 {
   "name": "agent-skills-compendium",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "A structured intelligence layer for building, understanding, and deploying AI agent capabilities.",
   "keywords": [

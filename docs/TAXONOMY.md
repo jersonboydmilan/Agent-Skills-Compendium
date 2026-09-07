@@ -15,7 +15,7 @@ for the layer model.
 
 All 20 categories below are **implemented** — each has at least one fully
 specified skill, which the content validator enforces. Counts reflect registry
-version 0.1.0 (76 skills).
+version 0.2.0 (76 skills).
 
 ## Summary
 

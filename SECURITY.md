@@ -7,7 +7,7 @@ Copyright © 2026 Jerson Boyd Milan
 
 ## Supported versions
 
-The Compendium is an open reference framework at `v0.1`. Security fixes land on
+The Compendium is an open reference framework at `v0.2`. Security fixes land on
 `main` and ship in the next release. Older tags are not patched.
 
 | Version | Supported |

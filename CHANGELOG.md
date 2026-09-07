@@ -12,6 +12,13 @@ project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+Nothing yet.
+
+## [0.2.0] — 2026-09-07
+
+> The first tagged release. Signed with the Ed25519 SSH key configured in
+> [0.1.0](#010--2026-09-01); `v0.1.0` remains untagged.
+
 ### Added
 
 - Continuous integration: typecheck, lint, content validation and tests on Node
@@ -94,8 +101,9 @@ project uses [Semantic Versioning](https://semver.org/).
 
 ## [0.1.0] — 2026-09-01
 
-> Published to GitHub on 2026-09-01. Not yet tagged: no `v0.1.0` Git tag or
-> GitHub release exists, pending commit-signing configuration.
+> Published to GitHub on 2026-09-01 but never tagged, because commit signing was
+> not yet configured. It was configured later in the same release cycle, and
+> tagging begins at [0.2.0](#020--2026-09-07). No `v0.1.0` tag exists.
 
 ### Added
 
@@ -179,3 +187,5 @@ project uses [Semantic Versioning](https://semver.org/).
 - Commits before this point are unsigned; they were not rewritten, because
   re-signing published history would change every commit SHA
 - Typography uses system font stacks rather than a licensed webface
+
+[0.2.0]: https://github.com/jersonboydmilan/Agent-Skills-Compendium/releases/tag/v0.2.0

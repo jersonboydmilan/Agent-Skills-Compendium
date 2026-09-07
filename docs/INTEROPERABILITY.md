@@ -42,7 +42,7 @@ are data. The governance model explicitly places *enforcement* in whatever
 runtime consumes them, precisely so the definitions stay portable.
 
 **Not a finished standard.** The taxonomy and the five-layer model are an open
-reference framework at v0.1. They are stable enough to build against and
+reference framework at v0.2. They are stable enough to build against and
 expected to move.
 
 ## One definition, several representations
