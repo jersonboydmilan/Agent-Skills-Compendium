@@ -47,7 +47,7 @@
     "next": "16.3.4",
     "react": "19.2.8",
     "react-dom": "19.2.8",
-    "yaml": "2.8.1",
+    "yaml": "2.8.3",
     "zod": "4.5.4"
   },
   "devDependencies": {
@@ -60,8 +60,7 @@
     "eslint-config-next": "^16.3.4",
     "tailwindcss": "4.3.3",
     "tsx": "4.23.13",
-    "typescript": "5.9.2",
-    "zod-to-json-schema": "^3.25.2"
+    "typescript": "5.9.2"
   },
   "allowScripts": {
     "@tailwindcss/oxide@4.3.3": true,

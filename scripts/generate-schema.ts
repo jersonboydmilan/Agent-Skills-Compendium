@@ -17,16 +17,27 @@
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { stringify } from "yaml";
-import { zodToJsonSchema } from "zod-to-json-schema";
+import * as z from "zod";
 import { skillSchema } from "../src/lib/schema";
 
 const OUT = join(process.cwd(), "schema");
 
-// No `name`: that would nest the schema under `definitions` and leave a bare
-// $ref at the root, which is awkward for consumers to use directly.
-const jsonSchema = zodToJsonSchema(skillSchema, {
-  $refStrategy: "none",
-  target: "jsonSchema7",
+// zod v4 converts to JSON Schema natively, so the external zod-to-json-schema
+// package is no longer needed — it ships v3-shaped types and does not type-check
+// against a v4 schema.
+//
+// `reused: "inline"` expands shared subschemas in place rather than hoisting
+// them into $defs and referencing them, so the document stays self-contained
+// and directly usable by a consumer that does not resolve $ref.
+// `io: "input"` describes a skill file as an author writes it, which is what
+// this schema is for. The default, "output", describes the post-parse value and
+// would mark all thirteen fields carrying .default() as required — turning an
+// optional `tags:` or `author:` into a validation failure for every hand-written
+// definition, and silently breaking existing consumers.
+const jsonSchema = z.toJSONSchema(skillSchema, {
+  target: "draft-7",
+  reused: "inline",
+  io: "input",
 }) as Record<string, unknown>;
 delete jsonSchema.$schema;
 

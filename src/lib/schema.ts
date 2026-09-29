@@ -70,8 +70,9 @@ export const escalationSchema = z.object({
 
 export const exampleSchema = z.object({
   title: z.string().min(1),
-  input: z.record(z.unknown()),
-  output: z.record(z.unknown()),
+  // zod v4 requires the key schema explicitly; v3's single-argument form is gone.
+  input: z.record(z.string(), z.unknown()),
+  output: z.record(z.string(), z.unknown()),
 });
 
 export const relatedSkillsSchema = z.object({

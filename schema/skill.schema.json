@@ -38,11 +38,11 @@
       ]
     },
     "domain": {
+      "default": null,
       "type": [
         "string",
         "null"
-      ],
-      "default": null
+      ]
     },
     "description": {
       "type": "string",
@@ -57,6 +57,7 @@
       "minLength": 1
     },
     "inputs": {
+      "minItems": 1,
       "type": "array",
       "items": {
         "type": "object",
@@ -82,37 +83,36 @@
           "required",
           "type",
           "description"
-        ],
-        "additionalProperties": false
-      },
-      "minItems": 1
+        ]
+      }
     },
     "prerequisites": {
+      "default": [],
       "type": "array",
       "items": {
         "type": "string",
         "minLength": 2,
         "pattern": "^[a-z0-9]+(?:[-_][a-z0-9]+)*$"
-      },
-      "default": []
+      }
     },
     "tools": {
+      "default": [],
       "type": "array",
       "items": {
         "type": "string",
         "minLength": 2,
         "pattern": "^[a-z0-9]+(?:[-_][a-z0-9]+)*$"
-      },
-      "default": []
+      }
     },
     "dependencies": {
+      "default": [],
       "type": "array",
       "items": {
         "type": "string"
-      },
-      "default": []
+      }
     },
     "procedure": {
+      "minItems": 2,
       "type": "array",
       "items": {
         "type": "object",
@@ -129,12 +129,11 @@
         "required": [
           "step",
           "description"
-        ],
-        "additionalProperties": false
-      },
-      "minItems": 2
+        ]
+      }
     },
     "decision_rules": {
+      "default": [],
       "type": "array",
       "items": {
         "type": "object",
@@ -151,12 +150,11 @@
         "required": [
           "condition",
           "action"
-        ],
-        "additionalProperties": false
-      },
-      "default": []
+        ]
+      }
     },
     "outputs": {
+      "minItems": 1,
       "type": "array",
       "items": {
         "type": "object",
@@ -178,12 +176,11 @@
           "name",
           "type",
           "description"
-        ],
-        "additionalProperties": false
-      },
-      "minItems": 1
+        ]
+      }
     },
     "validation": {
+      "minItems": 1,
       "type": "array",
       "items": {
         "type": "object",
@@ -195,12 +192,11 @@
         },
         "required": [
           "check"
-        ],
-        "additionalProperties": false
-      },
-      "minItems": 1
+        ]
+      }
     },
     "failure_modes": {
+      "minItems": 1,
       "type": "array",
       "items": {
         "type": "object",
@@ -217,12 +213,11 @@
         "required": [
           "failure",
           "mitigation"
-        ],
-        "additionalProperties": false
-      },
-      "minItems": 1
+        ]
+      }
     },
     "escalation": {
+      "default": [],
       "type": "array",
       "items": {
         "type": "object",
@@ -239,12 +234,11 @@
         "required": [
           "condition",
           "action"
-        ],
-        "additionalProperties": false
-      },
-      "default": []
+        ]
+      }
     },
     "examples": {
+      "default": [],
       "type": "array",
       "items": {
         "type": "object",
@@ -255,10 +249,16 @@
           },
           "input": {
             "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
             "additionalProperties": {}
           },
           "output": {
             "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
             "additionalProperties": {}
           }
         },
@@ -266,57 +266,54 @@
           "title",
           "input",
           "output"
-        ],
-        "additionalProperties": false
-      },
-      "default": []
+        ]
+      }
     },
     "related_skills": {
-      "type": "object",
-      "properties": {
-        "prerequisites": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "minLength": 2,
-            "pattern": "^[a-z0-9]+(?:[-_][a-z0-9]+)*$"
-          },
-          "default": []
-        },
-        "complementary": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "minLength": 2,
-            "pattern": "^[a-z0-9]+(?:[-_][a-z0-9]+)*$"
-          },
-          "default": []
-        },
-        "successors": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "minLength": 2,
-            "pattern": "^[a-z0-9]+(?:[-_][a-z0-9]+)*$"
-          },
-          "default": []
-        },
-        "related": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "minLength": 2,
-            "pattern": "^[a-z0-9]+(?:[-_][a-z0-9]+)*$"
-          },
-          "default": []
-        }
-      },
-      "additionalProperties": false,
       "default": {
         "prerequisites": [],
         "complementary": [],
         "successors": [],
         "related": []
+      },
+      "type": "object",
+      "properties": {
+        "prerequisites": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 2,
+            "pattern": "^[a-z0-9]+(?:[-_][a-z0-9]+)*$"
+          }
+        },
+        "complementary": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 2,
+            "pattern": "^[a-z0-9]+(?:[-_][a-z0-9]+)*$"
+          }
+        },
+        "successors": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 2,
+            "pattern": "^[a-z0-9]+(?:[-_][a-z0-9]+)*$"
+          }
+        },
+        "related": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 2,
+            "pattern": "^[a-z0-9]+(?:[-_][a-z0-9]+)*$"
+          }
+        }
       }
     },
     "complexity": {
@@ -329,19 +326,35 @@
       ]
     },
     "build_speed": {
-      "type": "number",
-      "enum": [
-        1,
-        2,
-        3
+      "anyOf": [
+        {
+          "type": "number",
+          "const": 1
+        },
+        {
+          "type": "number",
+          "const": 2
+        },
+        {
+          "type": "number",
+          "const": 3
+        }
       ]
     },
     "shareability": {
-      "type": "number",
-      "enum": [
-        1,
-        2,
-        3
+      "anyOf": [
+        {
+          "type": "number",
+          "const": 1
+        },
+        {
+          "type": "number",
+          "const": 2
+        },
+        {
+          "type": "number",
+          "const": 3
+        }
       ]
     },
     "maturity": {
@@ -354,19 +367,19 @@
       ]
     },
     "tags": {
+      "default": [],
       "type": "array",
       "items": {
         "type": "string"
-      },
-      "default": []
+      }
     },
     "author": {
-      "type": "string",
-      "default": "Agent Skills Compendium"
+      "default": "Agent Skills Compendium",
+      "type": "string"
     },
     "license": {
-      "type": "string",
-      "default": "MIT"
+      "default": "MIT",
+      "type": "string"
     },
     "risk_level": {
       "type": "string",
@@ -378,18 +391,18 @@
       ]
     },
     "required_permissions": {
+      "default": [],
       "type": "array",
       "items": {
         "type": "string"
-      },
-      "default": []
+      }
     },
     "restricted_actions": {
+      "default": [],
       "type": "array",
       "items": {
         "type": "string"
-      },
-      "default": []
+      }
     },
     "created_at": {
       "type": "string"
@@ -420,6 +433,5 @@
     "risk_level",
     "created_at",
     "updated_at"
-  ],
-  "additionalProperties": false
+  ]
 }

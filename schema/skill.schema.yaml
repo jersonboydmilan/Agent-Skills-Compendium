@@ -38,10 +38,10 @@ properties:
       - L4
       - L5
   domain:
+    default: null
     type:
       - string
       - "null"
-    default: null
   description:
     type: string
     minLength: 1
@@ -52,6 +52,7 @@ properties:
     type: string
     minLength: 1
   inputs:
+    minItems: 1
     type: array
     items:
       type: object
@@ -72,28 +73,27 @@ properties:
         - required
         - type
         - description
-      additionalProperties: false
-    minItems: 1
   prerequisites:
+    default: []
     type: array
     items:
       type: string
       minLength: 2
       pattern: ^[a-z0-9]+(?:[-_][a-z0-9]+)*$
-    default: []
   tools:
+    default: []
     type: array
     items:
       type: string
       minLength: 2
       pattern: ^[a-z0-9]+(?:[-_][a-z0-9]+)*$
-    default: []
   dependencies:
+    default: []
     type: array
     items:
       type: string
-    default: []
   procedure:
+    minItems: 2
     type: array
     items:
       type: object
@@ -107,9 +107,8 @@ properties:
       required:
         - step
         - description
-      additionalProperties: false
-    minItems: 2
   decision_rules:
+    default: []
     type: array
     items:
       type: object
@@ -123,9 +122,8 @@ properties:
       required:
         - condition
         - action
-      additionalProperties: false
-    default: []
   outputs:
+    minItems: 1
     type: array
     items:
       type: object
@@ -143,9 +141,8 @@ properties:
         - name
         - type
         - description
-      additionalProperties: false
-    minItems: 1
   validation:
+    minItems: 1
     type: array
     items:
       type: object
@@ -155,9 +152,8 @@ properties:
           minLength: 1
       required:
         - check
-      additionalProperties: false
-    minItems: 1
   failure_modes:
+    minItems: 1
     type: array
     items:
       type: object
@@ -171,9 +167,8 @@ properties:
       required:
         - failure
         - mitigation
-      additionalProperties: false
-    minItems: 1
   escalation:
+    default: []
     type: array
     items:
       type: object
@@ -187,9 +182,8 @@ properties:
       required:
         - condition
         - action
-      additionalProperties: false
-    default: []
   examples:
+    default: []
     type: array
     items:
       type: object
@@ -199,53 +193,54 @@ properties:
           minLength: 1
         input:
           type: object
+          propertyNames:
+            type: string
           additionalProperties: {}
         output:
           type: object
+          propertyNames:
+            type: string
           additionalProperties: {}
       required:
         - title
         - input
         - output
-      additionalProperties: false
-    default: []
   related_skills:
-    type: object
-    properties:
-      prerequisites:
-        type: array
-        items:
-          type: string
-          minLength: 2
-          pattern: ^[a-z0-9]+(?:[-_][a-z0-9]+)*$
-        default: []
-      complementary:
-        type: array
-        items:
-          type: string
-          minLength: 2
-          pattern: ^[a-z0-9]+(?:[-_][a-z0-9]+)*$
-        default: []
-      successors:
-        type: array
-        items:
-          type: string
-          minLength: 2
-          pattern: ^[a-z0-9]+(?:[-_][a-z0-9]+)*$
-        default: []
-      related:
-        type: array
-        items:
-          type: string
-          minLength: 2
-          pattern: ^[a-z0-9]+(?:[-_][a-z0-9]+)*$
-        default: []
-    additionalProperties: false
     default:
       prerequisites: []
       complementary: []
       successors: []
       related: []
+    type: object
+    properties:
+      prerequisites:
+        default: []
+        type: array
+        items:
+          type: string
+          minLength: 2
+          pattern: ^[a-z0-9]+(?:[-_][a-z0-9]+)*$
+      complementary:
+        default: []
+        type: array
+        items:
+          type: string
+          minLength: 2
+          pattern: ^[a-z0-9]+(?:[-_][a-z0-9]+)*$
+      successors:
+        default: []
+        type: array
+        items:
+          type: string
+          minLength: 2
+          pattern: ^[a-z0-9]+(?:[-_][a-z0-9]+)*$
+      related:
+        default: []
+        type: array
+        items:
+          type: string
+          minLength: 2
+          pattern: ^[a-z0-9]+(?:[-_][a-z0-9]+)*$
   complexity:
     type: string
     enum:
@@ -254,17 +249,21 @@ properties:
       - advanced
       - expert
   build_speed:
-    type: number
-    enum:
-      - 1
-      - 2
-      - 3
+    anyOf:
+      - type: number
+        const: 1
+      - type: number
+        const: 2
+      - type: number
+        const: 3
   shareability:
-    type: number
-    enum:
-      - 1
-      - 2
-      - 3
+    anyOf:
+      - type: number
+        const: 1
+      - type: number
+        const: 2
+      - type: number
+        const: 3
   maturity:
     type: string
     enum:
@@ -273,16 +272,16 @@ properties:
       - beta
       - production
   tags:
+    default: []
     type: array
     items:
       type: string
-    default: []
   author:
-    type: string
     default: Agent Skills Compendium
-  license:
     type: string
+  license:
     default: MIT
+    type: string
   risk_level:
     type: string
     enum:
@@ -291,15 +290,15 @@ properties:
       - high
       - critical
   required_permissions:
+    default: []
     type: array
     items:
       type: string
-    default: []
   restricted_actions:
+    default: []
     type: array
     items:
       type: string
-    default: []
   created_at:
     type: string
   updated_at:
@@ -326,4 +325,3 @@ required:
   - risk_level
   - created_at
   - updated_at
-additionalProperties: false
