@@ -24,6 +24,14 @@
   --color-l4: #b02a5b;
   --color-l5: #2f4bd8;
 
+  /* Fleet agent status. Used as both a cell fill and a text colour, so each
+     one is held to AA against paper, surface and raised. */
+  --color-ok: #15704a;
+  --color-bad: #b63228;
+  --color-gate: #8a5300;
+  --color-escalate: #7a3bb8;
+  --color-idle: #686d76;
+
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, "SF Mono", SFMono-Regular, "JetBrains Mono", Menlo, Consolas, monospace;
 
@@ -55,6 +63,12 @@
       --color-l3: #e8944f;
       --color-l4: #ef6f9c;
       --color-l5: #8ea0ff;
+
+      --color-ok: #4ec98d;
+      --color-bad: #ff8178;
+      --color-gate: #e3a74e;
+      --color-escalate: #c49bff;
+      --color-idle: #878d97;
     }
   }
 
@@ -109,5 +123,21 @@
 
   .prose-tight p + p {
     margin-top: 0.75em;
+  }
+
+  /* A running agent breathes so a live fleet is distinguishable from a frozen
+     one at a glance. The reduced-motion rule in @layer base stops it. */
+  .agent-live {
+    animation: agent-pulse 1.4s ease-in-out infinite;
+  }
+
+  @keyframes agent-pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.45;
+    }
   }
 }

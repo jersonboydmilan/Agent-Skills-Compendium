@@ -24,9 +24,9 @@ export default async function ApiReferencePage() {
         <Label>Machine interface</Label>
         <h1 className="mt-2 text-3xl font-medium tracking-[-0.02em] sm:text-4xl">API reference</h1>
         <p className="mt-3 max-w-2xl text-[0.9375rem] leading-relaxed text-[var(--color-ink-muted)]">
-          The same definitions that render this site are what an agent consumes. Every response is
-          public, CORS-open and cacheable, and needs no authentication. {skills.length} skills,{" "}
-          {categories.length} categories, {layers.length} layers.
+          The same definitions that render this site are what an agent consumes. Every registry
+          response is public, CORS-open and cacheable, and needs no authentication.{" "}
+          {skills.length} skills, {categories.length} categories, {layers.length} layers.
         </p>
       </header>
 
@@ -50,6 +50,12 @@ export default async function ApiReferencePage() {
           <li>
             — Unknown slugs return <span className="font-mono text-[0.875rem]">404</span> with{" "}
             <span className="font-mono text-[0.875rem]">{"{ error }"}</span>.
+          </li>
+          <li>
+            — The <span className="font-mono text-[0.875rem]">/api/fleet</span> routes are the
+            exception to caching: a fleet is live state held in process memory, so those responses
+            are never cached and do not survive a restart. Everything under{" "}
+            <span className="font-mono text-[0.875rem]">/api/skills</span> is static registry data.
           </li>
         </ul>
       </section>

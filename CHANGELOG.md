@@ -12,7 +12,42 @@ project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-Nothing yet.
+### Added
+
+- **Agent fleet** — deploy up to 500 agents against one objective, each carrying a
+  skill set drawn from the registry (a primary skill, its prerequisite closure in
+  dependency order, and its complements), and inspect every one of them while it
+  runs. It is a rehearsal, not an execution: no model is called and no tool is
+  invoked. Step durations come from the declared `build_speed` and `complexity`,
+  failures are drawn from the skills' own `failure_modes`, recovery uses the
+  `mitigation` each one states, an unrecovered failure fires that skill's
+  `escalation` rule, and a run only succeeds if every `validation` check passes —
+  so a fleet is only ever as good as the definitions it runs. See
+  [docs/FLEET.md](docs/FLEET.md).
+- Approval gate — agents at or above a configurable risk level are held before they
+  run, and the fleet pauses and says it is waiting on a person. An agent's risk is
+  the highest in its whole skill set, not just its primary skill. An approval lifts
+  a gate pause but never an operator pause.
+- `/fleet` — mission control: a swarm grid of every agent coloured by status
+  (keyboard-navigable with a single tab stop), a roster view with per-agent
+  progress, status filters, operator controls, a live feed, and a detail panel
+  showing one agent's whole run with the failure modes it hit beside the
+  mitigations its definitions prescribe.
+- Seven fleet routes — `POST /api/fleet`, `GET /api/fleet`, `GET /api/fleet/:id`,
+  `GET /api/fleet/:id/agents`, `GET /api/fleet/:id/agents/:agentId`,
+  `GET /api/fleet/:id/stream` (server-sent events) and
+  `POST /api/fleet/:id/control`. Documented at `/api-reference` from the same route
+  list the registry routes use.
+- Deterministic replay — the same seed, size, strategy and registry produce the same
+  fleet: the same agents, shards, failures and outcomes. Each agent's run is decided
+  before it starts, so the scheduler controls when a transition becomes visible,
+  never what it is.
+- Agent status colour tokens, held to WCAG AA against every surface in both themes.
+
+### Changed
+
+- `/api-reference` states that the `/api/fleet` routes are the one exception to the
+  caching convention, being live state held in process memory.
 
 ## [0.2.0] — 2026-09-07
 

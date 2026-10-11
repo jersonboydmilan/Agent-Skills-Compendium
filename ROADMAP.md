@@ -22,7 +22,9 @@ domain.
   someone else's skill — [#11](../../issues/11). 🙌
 - **Corrections from practitioners.** A failure mode that is not real, a validation check
   that cannot be checked, a procedure that is not how the work is actually done. These are
-  the most valuable pull requests the project can receive. 🙌
+  the most valuable pull requests the project can receive — and a
+  [fleet rehearsal](docs/FLEET.md) is a quick way to find candidates, since it can only
+  ever be as good as the definitions it runs. 🙌
 - **Coverage gaps.** Categories where the existing skills assume a narrower context than
   the category name promises.
 
@@ -43,10 +45,11 @@ domain.
 
 ## Later — deliberately out of scope for now
 
-- **Execution.** The composer plans; it does not run anything. Nothing in the data model
-  blocks a runtime, and enforcement of the governance model belongs to whatever executes
-  the definitions. That separation is the point, so a runtime would live beside this
-  project rather than inside it.
+- **Execution.** Still out. The composer plans and the [agent fleet](docs/FLEET.md)
+  rehearses — it plays definitions back against themselves, with no model call, no tool
+  access and no side effects. Actually running a skill means credentials, tool access and
+  enforcement of the governance model, and that belongs beside this project rather than
+  inside it. The fleet's approval gate exists to show where that line is.
 - **A hosted deployment.** The site runs locally with no database, no API key and no
   environment file. A public deployment is a question of hosting, not of code.
 - **A storage backend other than the filesystem.** Nothing outside
