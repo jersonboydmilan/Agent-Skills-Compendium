@@ -11,6 +11,21 @@ updates:
       prefix-development: "chore(dev-deps)"
     labels:
       - dependencies
+    # Two majors the Next ESLint config cannot take yet. Both were tested and
+    # both fail on a transitive dependency rather than on anything in this
+    # repository, so Dependabot would otherwise reopen them every week.
+    ignore:
+      # eslint-plugin-react 7.37.5 — the latest, and the one eslint-config-next
+      # bundles — still calls context.getFilename(), which ESLint 10 removed.
+      # Lift this when eslint-plugin-react ships an ESLint 10 compatible release.
+      - dependency-name: eslint
+        update-types: ["version-update:semver-major"]
+      # typescript-eslint refuses to load against TS 7 ("does not support TS
+      # 7.0"), though tsc 7 itself typechecks and builds this project cleanly.
+      # Lift this when typescript-eslint declares TS 7 support.
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
+
     groups:
       # Framework and toolchain move together; a split bump just costs review time.
       next:
