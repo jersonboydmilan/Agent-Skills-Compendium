@@ -9,15 +9,17 @@
 [![Version](https://img.shields.io/badge/version-0.2.0-38bdf8?style=for-the-badge&logo=semanticrelease&logoColor=white&labelColor=0b1020)](CHANGELOG.md)
 [![Skills](https://img.shields.io/badge/skills-76-e879f9?style=for-the-badge&logo=databricks&logoColor=white&labelColor=0b1020)](content/skills)
 [![JSON Schema](https://img.shields.io/badge/schema-JSON%20Schema-f59e0b?style=for-the-badge&logo=json&logoColor=white&labelColor=0b1020)](schema/)
+[![Fleet](https://img.shields.io/badge/fleet-500%20agents-22c55e?style=for-the-badge&logo=rocket&logoColor=white&labelColor=0b1020)](docs/FLEET.md)
 
 [![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=flat-square&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
-[![Zod](https://img.shields.io/badge/Zod-3-3E67B1?style=flat-square&logo=zod&logoColor=white)](https://zod.dev/)
+[![Zod](https://img.shields.io/badge/Zod-4-3E67B1?style=flat-square&logo=zod&logoColor=white)](https://zod.dev/)
 [![Node](https://img.shields.io/badge/Node-%E2%89%A520-5FA04E?style=flat-square&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-22c55e?style=flat-square&logo=github&logoColor=white)](CONTRIBUTING.md)
 
+**[🛰️ Agent fleet](docs/FLEET.md)** ·
 **[📚 Architecture](docs/ARCHITECTURE.md)** ·
 **[🗂️ Taxonomy](docs/TAXONOMY.md)** ·
 **[🔌 Interoperability](docs/INTEROPERABILITY.md)** ·
