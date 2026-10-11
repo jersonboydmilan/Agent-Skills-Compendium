@@ -10,6 +10,7 @@ const NAV = [
   { href: "/categories", label: "Categories" },
   { href: "/layers", label: "Layers" },
   { href: "/compose", label: "Composer" },
+  { href: "/fleet", label: "Fleet" },
   { href: "/api-reference", label: "API" },
   { href: "/contribute", label: "Contribute" },
 ];

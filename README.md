@@ -46,7 +46,7 @@ A skill may invoke several tools to produce a validated outcome.
 <td align="center"><strong>20</strong><br><sub>categories</sub></td>
 <td align="center"><strong>5</strong><br><sub>architectural layers</sub></td>
 <td align="center"><strong>49</strong><br><sub>normalised tools</sub></td>
-<td align="center"><strong>8</strong><br><sub>public API routes</sub></td>
+<td align="center"><strong>15</strong><br><sub>public API routes</sub></td>
 <td align="center"><strong>MIT</strong><br><sub>per definition</sub></td>
 </tr>
 </table>
@@ -57,9 +57,10 @@ A skill may invoke several tools to produce a validated outcome.
 |---|---|---|
 | [📐 Where this sits](#-where-this-sits) | [🚫 What this is not](#-what-this-is-not) | [✍️ Authorship](#️-authorship) |
 | [📦 What is here](#-what-is-here) | [⚡ Running it](#-running-it) | [🏛️ Architecture](#️-architecture) |
-| [🔌 Machine interface](#-machine-interface) | [🎬 **Examples**](#-examples) | [➕ Adding a skill](#-adding-a-skill) |
-| [🗒️ Notes on the current build](#️-notes-on-the-current-build) | [🖥️ Interface](#️-interface) | [🧱 Frameworks](#-frameworks) |
-| [🙌 Contributing](#-contributing) | [📄 Project documents](#-project-documents) | [🗺️ Roadmap](ROADMAP.md) |
+| [🔌 Machine interface](#-machine-interface) | [🎬 **Examples**](#-examples) | [🛰️ **Agent fleet**](#-agent-fleet) |
+| [➕ Adding a skill](#-adding-a-skill) | [🖥️ Interface](#️-interface) | [🧱 Frameworks](#-frameworks) |
+| [🗒️ Notes on the current build](#️-notes-on-the-current-build) | [🙌 Contributing](#-contributing) | [📄 Project documents](#-project-documents) |
+| [🗺️ Roadmap](ROADMAP.md) | [✍️ Writing a skill](docs/SKILL_AUTHORING.md) | [🛰️ Fleet guide](docs/FLEET.md) |
 
 ## 📐 Where this sits
 
@@ -117,7 +118,9 @@ packages.
 
 **Not a runtime.** The definitions are data. Enforcement of the governance model
 belongs to whatever executes them, deliberately, so the definitions stay
-portable.
+portable. The [agent fleet](#-agent-fleet) is not a counter-example: it
+rehearses definitions against themselves, with no tool access and no side
+effects, which is precisely the line a runtime would have to cross.
 
 **Not a finished standard.** An open reference framework at v0.2, stable enough
 to build against and expected to move.
@@ -239,7 +242,17 @@ GET /api/categories                          with live skill counts
 GET /api/layers                              with live skill counts
 GET /api/schema                              the canonical JSON Schema
 GET /api/search?q=                           matches skills, categories and layers
+
+POST /api/fleet                              deploy a fleet of agents against an objective
+GET  /api/fleet/:id                          status, aggregate and feed
+GET  /api/fleet/:id/agents                   the roster, filterable and paged
+GET  /api/fleet/:id/agents/:agentId          one agent's whole run
+GET  /api/fleet/:id/stream                   server-sent events while it runs
+POST /api/fleet/:id/control                  pause, resume, abort, approve
 ```
+
+The registry routes are cacheable and static. The `/api/fleet` routes are live state held
+in process memory, so they are never cached and do not survive a restart.
 
 The `/api/skills` route accepts the same query parameters as the `/skills` page — `q`,
 `category`, `layer`, `complexity`, `maturity`, `risk`, `tag`, `speed`, `share` — so a URL a
@@ -433,6 +446,52 @@ registry travels with its license attached. YAML export is round-trippable: the 
 document has the same shape as the source file and re-validates against the schema
 unchanged.
 
+## 🛰️ Agent fleet
+
+Deploy hundreds of agents against one objective and watch every one of them. Each agent
+carries a skill set drawn from the registry — a primary skill, its prerequisite closure in
+dependency order, and its complements — so a fleet is the registry put under load.
+
+![A 120-agent fleet running, with the swarm grid, aggregate and live feed](docs/screenshots/07-fleet.png)
+
+**It is a rehearsal, not an execution.** No model is called and no tool is invoked. Each
+agent is played out against the definitions it carries:
+
+| What happens | Where it comes from |
+|---|---|
+| How long a step takes | the skill's declared `build_speed` and `complexity` |
+| *What* goes wrong | one of that skill's own `failure_modes` — never invented |
+| Whether it recovers | the `mitigation` that failure mode declares |
+| What happens when it does not | that skill's `escalation` rule, quoted verbatim |
+| Whether the run succeeded | every one of its `validation` checks |
+
+So a fleet is only ever as good as the definitions it runs — which is the point. A skill
+whose failure modes are imaginary produces imaginary failures, and three hundred agents is
+a fast way to see which definitions are carrying their weight.
+
+Clicking any agent opens its whole run: the skill set, every step, each failure mode it hit
+beside the mitigation its own definition prescribes, the validation checks that decided the
+outcome, and the permissions, tools and restricted actions it carries.
+
+![One agent's run, showing the failure mode it hit and the mitigation its definition prescribes](docs/screenshots/08-fleet-agent.png)
+
+**The approval gate is the governance model, enforced.** `approvalThreshold` holds every
+agent at or above a risk level before it runs; the fleet runs everything below the line,
+then pauses and says it is waiting on a person. An agent's risk is the highest in its whole
+skill set, not just its primary skill.
+
+```bash
+curl -X POST localhost:3000/api/fleet -H 'content-type: application/json' \
+  -d '{"objective":"Harden the agent surface","size":120,"strategy":"spread","approvalThreshold":"high","seed":1}'
+```
+
+The same seed and registry replay the same fleet — same agents, same failures, same
+outcome — so two rehearsals are comparable and any difference between them is the
+registry's. Fleets live in process memory and do not survive a restart.
+
+[**docs/FLEET.md**](docs/FLEET.md) has the roster strategies, the determinism guarantee,
+the live-update protocol and the limits.
+
 ## ➕ Adding a skill
 
 1. Copy an existing definition (every skill page exposes its YAML).
@@ -577,6 +636,7 @@ npm run export:skills     # dist/skills/**/SKILL.md packages
 | 🌱 | [docs/ORIGIN.md](docs/ORIGIN.md) | Conceptual origin of the framework |
 | 🏛️ | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | The five-layer model and skill specification |
 | 🗂️ | [docs/TAXONOMY.md](docs/TAXONOMY.md) | All 20 categories with their capabilities |
+| 🛰️ | [docs/FLEET.md](docs/FLEET.md) | Deploying and watching a fleet, and what a rehearsal is |
 | 🔌 | [docs/INTEROPERABILITY.md](docs/INTEROPERABILITY.md) | Position relative to MCP, SKILL.md and agent runtimes |
 | 📡 | `/api-reference` | Live API documentation, rendered from the route definitions |
 | 🧪 | [evaluation/](evaluation/evaluation-framework.md) | Skill evaluation framework and result schema |

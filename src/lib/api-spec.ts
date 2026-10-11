@@ -15,7 +15,7 @@ export interface ApiParam {
 }
 
 export interface ApiEndpoint {
-  method: "GET";
+  method: "GET" | "POST";
   path: string;
   summary: string;
   description: string;
@@ -122,5 +122,100 @@ export const ENDPOINTS: ApiEndpoint[] = [
     ],
     example: "/api/search?q=incident",
     returns: "{ query, skills[], categories[], layers[] }",
+  },
+  {
+    method: "POST",
+    path: "/api/fleet",
+    summary: "Deploy a fleet",
+    description:
+      "Plans and starts a fleet of agents against one objective. Each agent carries a skill set drawn from the registry. Fleets are held in process memory and are not cached — they do not survive a restart.",
+    params: [
+      { name: "objective", type: "string", description: "What the fleet is for. Trimmed to 300 characters." },
+      { name: "size", type: "1…500", description: "How many agents to deploy. Above the pool size, agents share a role on separate shards." },
+      { name: "strategy", type: "spread | category | layer | explicit", description: "How the roster is drawn. explicit requires a skills array." },
+      { name: "skills", type: "slug[]", description: "Required for the explicit strategy. Unknown slugs are reported in notices rather than dropped silently." },
+      { name: "categories", type: "slug[]", description: "Narrows the pool for the category strategy." },
+      { name: "layers", type: "L1…L5", description: "Narrows the pool for the layer strategy." },
+      { name: "concurrency", type: "1…64", description: "How many agents run at once." },
+      { name: "approvalThreshold", type: "none | medium | high | critical", description: "Agents at or above this risk are held at an approval gate before they run." },
+      { name: "seed", type: "integer", description: "The same seed and registry replay the same fleet." },
+    ],
+    example: "POST /api/fleet {\"objective\":\"Harden the agent surface\",\"size\":120,\"strategy\":\"spread\"}",
+    returns: "201 { fleet, aggregate, events[], agents[] } — 400 with { error } for an unknown strategy or a size above the cap.",
+  },
+  {
+    method: "GET",
+    path: "/api/fleet",
+    summary: "List fleets",
+    description: "Every fleet this process is holding, newest first, each with its aggregate.",
+    params: [],
+    example: "/api/fleet",
+    returns: "{ count, fleets[] }",
+  },
+  {
+    method: "GET",
+    path: "/api/fleet/:id",
+    summary: "One fleet",
+    description: "A fleet's status, aggregate, notices and recent event feed. 404 once the process that held it has restarted.",
+    params: [
+      { name: ":id", type: "path", description: "Fleet identifier returned by the deploy call." },
+      { name: "agents", type: "0", description: "Omit the agent roster from the response." },
+    ],
+    example: "/api/fleet/flt-1-abcd",
+    returns: "{ fleet, aggregate, events[], agents[] }",
+  },
+  {
+    method: "GET",
+    path: "/api/fleet/:id/agents",
+    summary: "The roster",
+    description:
+      "Agent summaries, filterable and paged. Summaries rather than whole agents, because a 500-agent fleet is too much to send in full.",
+    params: [
+      { name: "status", type: "queued | awaiting-approval | running | succeeded | failed | escalated | aborted", description: "Comma-separated." },
+      { name: "layer", type: "L1…L5", description: "Comma-separated." },
+      { name: "risk", type: "low | medium | high | critical", description: "Comma-separated." },
+      { name: "skill", type: "slug", description: "Agents carrying this skill anywhere in their set." },
+      { name: "q", type: "string", description: "Matches role, agent id or primary skill." },
+      { name: "limit", type: "1…500", description: "Page size, default 50." },
+      { name: "offset", type: "integer", description: "Page offset." },
+    ],
+    example: "/api/fleet/flt-1-abcd/agents?status=escalated&limit=20",
+    returns: "{ count, total, offset, limit, agents[] }",
+  },
+  {
+    method: "GET",
+    path: "/api/fleet/:id/agents/:agentId",
+    summary: "One agent in full",
+    description:
+      "The agent's whole run: skill set, every procedure step with any failure mode it hit and the mitigation its definition prescribes, validation checks, escalation, and the governance surface.",
+    params: [
+      { name: ":id", type: "path", description: "Fleet identifier." },
+      { name: ":agentId", type: "path", description: "Agent identifier, e.g. agt-0042." },
+    ],
+    example: "/api/fleet/flt-1-abcd/agents/agt-0042",
+    returns: "{ agent, events[] }",
+  },
+  {
+    method: "GET",
+    path: "/api/fleet/:id/stream",
+    summary: "Live fleet updates",
+    description:
+      "Server-sent events. An event message per feed line as it happens, and a snapshot of the roster and aggregate on a timer. The stream closes itself when the fleet settles.",
+    params: [{ name: ":id", type: "path", description: "Fleet identifier." }],
+    example: "/api/fleet/flt-1-abcd/stream",
+    returns: "text/event-stream — event: event | snapshot",
+  },
+  {
+    method: "POST",
+    path: "/api/fleet/:id/control",
+    summary: "Pause, resume, abort, approve",
+    description:
+      "Operator control. approve clears the approval gate — pass an agentId to release one agent rather than all of them. An approval lifts a gate pause, but never an operator pause.",
+    params: [
+      { name: "action", type: "pause | resume | abort | approve", description: "What to do." },
+      { name: "agentId", type: "string", description: "With approve, releases only that agent." },
+    ],
+    example: "POST /api/fleet/flt-1-abcd/control {\"action\":\"approve\"}",
+    returns: "{ fleet, aggregate, events[], agents[] }",
   },
 ];
