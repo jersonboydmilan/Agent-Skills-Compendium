@@ -12,6 +12,10 @@ project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+Nothing yet.
+
+## [0.3.0] — 2026-10-12
+
 ### Added
 
 - **Agent fleet** — deploy up to 500 agents against one objective, each carrying a
@@ -48,6 +52,14 @@ project uses [Semantic Versioning](https://semver.org/).
 
 - `/api-reference` states that the `/api/fleet` routes are the one exception to the
   caching convention, being live state held in process memory.
+- Next 16.4.0, React 19.3.0, Zod 4, yaml 2.9.1, sharp 0.35.5 and the Node toolchain
+  brought current, including fixes for `brace-expansion` and `source-map-js`.
+- Dependabot ignores major bumps of `eslint` and `typescript`. Both were tested
+  against the real tree and both fail on a transitive dependency of
+  `eslint-config-next` rather than on anything here: `eslint-plugin-react@7.37.5`
+  still calls `context.getFilename()`, which ESLint 10 removed, and
+  `typescript-eslint` refuses to load against TS 7 even though `tsc 7` typechecks
+  and builds this project cleanly. Each ignore records the condition that lifts it.
 
 ## [0.2.0] — 2026-09-07
 
@@ -223,4 +235,5 @@ project uses [Semantic Versioning](https://semver.org/).
   re-signing published history would change every commit SHA
 - Typography uses system font stacks rather than a licensed webface
 
+[0.3.0]: https://github.com/jersonboydmilan/Agent-Skills-Compendium/releases/tag/v0.3.0
 [0.2.0]: https://github.com/jersonboydmilan/Agent-Skills-Compendium/releases/tag/v0.2.0
