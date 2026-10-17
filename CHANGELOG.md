@@ -12,7 +12,9 @@ project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-Nothing yet.
+### Added
+
+- Star history chart in the README.
 
 ## [0.3.0] — 2026-10-12
 

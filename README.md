@@ -647,6 +647,12 @@ npm run export:skills     # dist/skills/**/SKILL.md packages
 
 ---
 
+### ⭐ Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=jersonboydmilan/Agent-Skills-Compendium&type=Date)](https://star-history.com/#jersonboydmilan/Agent-Skills-Compendium&Date)
+
+---
+
 <div align="center">
 
 ### ⭐ Agent Skills Compendium
