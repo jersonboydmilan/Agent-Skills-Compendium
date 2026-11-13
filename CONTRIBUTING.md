@@ -29,7 +29,7 @@ npm install
 npm run dev          # http://localhost:3000
 ```
 
-Node 20 or newer. No database, no API key, no environment file.
+Node 20.19+ or 22.12+. No database, no API key, no environment file.
 
 ```bash
 npm run check             # what CI runs: typecheck + lint + content validation + tests

@@ -168,7 +168,7 @@ npm install
 npm run dev          # http://localhost:3000
 ```
 
-Requires Node 20 or newer. There is no database, no API key and no environment file —
+Requires Node 20.19+ or 22.12+. There is no database, no API key and no environment file —
 the registry is YAML on disk, read at request time.
 
 Five minutes well spent, once it is up:
